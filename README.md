@@ -12,7 +12,7 @@ if (!requireNamespace("BiocManager", quietly = TRUE))
 
 BiocManager::install("GenomicFeatures")
 
-BiocManager::install("Guitar", version = 3.8)
+BiocManager::install("Guitar")
 
 BiocManager::install("trackViewer")
 
