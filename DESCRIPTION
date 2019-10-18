@@ -1,0 +1,12 @@
+Package: Funm6AViewer
+Type: Package
+Title: Visualization of single base differential m6A methylation sites and functional DmM genes.
+Version: 0.3.0
+Author: Songyao Zhang
+Maintainer: Songyao Zhang <zsynwpu@gmail.com>
+Description: Visualization of single base differential m6A methylation sites and functional DmM genes.
+License: GPL (>= 2)
+Imports: Guitar,trackViewer,DESeq2,RobustRankAggreg,parallel,ggrepel,igraph,STRINGdb,ggplot2,scales
+Depends: GenomicFeatures,TxDb.Hsapiens.UCSC.hg19.knownGene,org.Hs.eg.db
+Encoding: UTF-8
+LazyData: true
