@@ -232,7 +232,6 @@ fdmdeepm6A <- function(DMgene,
 .getrandomscore <- function(x, msbscore, alphapath) {
 
   source(alphapath)
-  print(x)
   len <- nrow(msbscore)
 
   randomscorem <- as.vector(msbscore)

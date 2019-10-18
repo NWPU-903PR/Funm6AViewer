@@ -6,8 +6,6 @@ characterdmsites <- function(dmgr,
 
   if (is.na(savepath)) {savepath <- getwd()}
 
-  gc_txdb <- makeGuitarCoordsFromTxDb(txdb, noBins = 10)
-
   gr <-  GRanges(seqnames = dmgr$chr,
                  IRanges(start = dmgr$chromEnd, width = 1),
                  strand = dmgr$strand)
@@ -17,11 +15,12 @@ characterdmsites <- function(dmgr,
   gr_hyper <- gr[gr$foldenrich == "hyper"]
   gr_hypo <- gr[gr$foldenrich == "hypo"]
 
-  saveToPDFprefix <- paste(savepath, "DmMSiteDistribution", sep = "/")
+  miscOutFilePrefix <- paste(savepath, "DmMSiteDistribution", sep = "/")
   grplot <- list(diffpeak = gr, hyper = gr_hyper, hypo = gr_hypo)
-  GuitarPlot(grplot,
-             GuitarCoordsFromTxDb = gc_txdb,
-             saveToPDFprefix = saveToPDFprefix)
+  GuitarPlot(txTxdb = txdb,
+             stGRangeLists = grplot,
+             stGroupName = c("diffsites", "hyper", "hypo"),
+             miscOutFilePrefix = miscOutFilePrefix)
 
 
   ## pichart plot
