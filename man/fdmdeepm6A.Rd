@@ -62,7 +62,27 @@ Songyao Zhang
 }
 \examples{
 
+## FunDMDeep-m6A
 
+dminfo <- system.file("extdata", "DMinfo_toy.xls", package="Funm6AViewer")
+deinfo <- system.file("extdata", "DEinfo_toy.xls", package="Funm6AViewer")
+
+dminfo <- read.table(dminfo, header = TRUE, stringsAsFactors = FALSE)
+deinfo <- read.delim(deinfo, header = TRUE, stringsAsFactors = FALSE)
+
+DMgene <- unique(dminfo$name)
+descore <- getdescore(deinfo)
+
+# The datapath is the filepath where the required PPI data saved, they can be downloaded
+# from https://pan.baidu.com/s/1qOGG57OgxmrTwSbbBEeQ2w&shfl=sharepset
+datapath <- "F:/Funm6A_package/data"
+permutime <- 1000
+
+re <- fdmdeepm6A(DMgene = DMgene, descore = descore, datapath = datapath, permutime = permutime)
+
+# plot interested gene MSB score
+siggene <- c("CCNT1", "MYC", "BCL2")
+siggenescoreplot(fdmgene = re, siggene = siggene)
 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

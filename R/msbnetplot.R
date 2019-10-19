@@ -3,11 +3,21 @@
 msbnetplot <- function(genesymbol,
                        dmgene,
                        descore,
+                       orgsymbol = org.Hs.egSYMBOL,
                        datapath = NA,
                        savepath = NA,
                        savename = NA,
                        plotsize = NA,
                        labeloff = FALSE) {
+
+  genesymbol <- .getgenesymbol(orgsymbol, genesymbol)
+  genesymbol <- genesymbol$genesymbol
+
+  dmgene <- .getgenesymbol(orgsymbol, dmgene)
+  dmgene <- dmgene$genesymbol
+
+  degenes <- .getgenesymbol(orgsymbol, names(descore))
+  names(descore) <- degenes$genesymbol
 
   if (is.na(datapath)) { datapath <- system.file("extdata", package="Funm6AViewer") }
   if (is.na(savepath)) {savepath <- getwd()}

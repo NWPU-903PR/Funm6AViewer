@@ -50,6 +50,15 @@ Songyao Zhang
 }
 \examples{
 
+## dm sites plot for interested genes
+
+dminfo <- system.file("extdata", "DMinfo_toy.xls", package="Funm6AViewer")
+dminfo <- read.table(dminfo, header = TRUE, stringsAsFactors = FALSE)
+
+siggene <- c("CCNT1", "MYC", "BCL2")
+
+re <- dmsiteplot(dminfo = dminfo, intrested_gene = siggene)
+
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

@@ -54,6 +54,18 @@ Songyao Zhang
 }
 \examples{
 
+## reads coverage plot for interested genes
+
+dminfo <- system.file("extdata", "DMinfo_toy.xls", package="Funm6AViewer")
+dminfo <- read.table(dminfo, header = TRUE, stringsAsFactors = FALSE)
+
+bamreadsgr <- system.file("extdata", "bamgrlist_toy.RData", package="Funm6AViewer")
+load(bamreadsgr)
+
+siggene <- c("CCNT1", "MYC", "BCL2")
+
+re <- coverageplot(dminfo = dminfo, grlist = grlist, intrested_gene = siggene)
+
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

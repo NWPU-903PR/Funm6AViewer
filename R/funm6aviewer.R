@@ -53,18 +53,15 @@ funm6aviewer <- function(dminfo,
   if (!is.na(intrested_gene[1])) {
     savepath1 <- paste(savepath, "DmMSiteOnGene", sep = "/")
     dir.create(savepath1)
+
     ## plot dmsites
-    for (i in 1:length(siggene)) {
-      vp <- dmsiteplot(dminfo, intrested_gene = intrested_gene[i],
-                       savepath = savepath1, txdb = txdb, orgsymbol = orgsymbol, orgdb = orgdb)
-    }
+    vp <- dmsiteplot(dminfo, intrested_gene = intrested_gene,
+                     savepath = savepath1, txdb = txdb, orgsymbol = orgsymbol, orgdb = orgdb)
 
     ## plot coverage
     if (!is.na(bamgrlist[1])) {
-      for (i in 1:length(siggene)) {
-        vp <- coverageplot(dminfo, bamgrlist, intrested_gene = intrested_gene[i],
-                           savepath = savepath1, txdb = txdb, orgsymbol = orgsymbol, orgdb = orgdb)
-      }
+      vp <- coverageplot(dminfo, bamgrlist, intrested_gene = intrested_gene,
+                         savepath = savepath1, txdb = txdb, orgsymbol = orgsymbol, orgdb = orgdb)
     }
   }
 
@@ -128,8 +125,8 @@ funm6aviewer <- function(dminfo,
 
     ## plot MSB net
     dmgene <- unique(as.character(fdmgene$DMgene))
-    netl <- lapply(as.list(siggene), msbnetplot, dmgene, descore, datapath, savepath4)
-    net <- msbnetplot(siggene, dmgene, descore, datapath, savepath = savepath4, savename = "SigGene", labeloff = T)
+    netl <- lapply(as.list(siggene), msbnetplot, dmgene, descore, orgsymbol, datapath, savepath4)
+    net <- msbnetplot(siggene, dmgene, descore, orgsymbol, datapath, savepath = savepath4, savename = "SigGene", labeloff = T)
   }
 
   ## plot enrichment

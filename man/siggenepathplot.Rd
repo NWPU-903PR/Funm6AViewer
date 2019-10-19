@@ -66,6 +66,24 @@ Songyao Zhang
 }
 \examples{
 
+## context specific function annotation for interested genes
+
+dminfo <- system.file("extdata", "DMinfo_toy.xls", package="Funm6AViewer")
+dminfo <- read.table(dminfo, header = TRUE, stringsAsFactors = FALSE)
+fdmgene <- unique(dminfo$name)
+
+siggene <- c("CCNT1", "MYC", "BCL2")
+
+# The input_directory is the parameter passed to string_db, the GO and KEGG function
+# annotation data will be downloaded to the setted filepath.
+# You can also donwloaded the annotation data previously
+# from https://pan.baidu.com/s/1qOGG57OgxmrTwSbbBEeQ2w&shfl=sharepset
+# and set the input_directory as where you save the data.
+input_directory <- "F:/Funm6A_package/data"
+
+re <- siggenepathplot(fdmgene = fdmgene, intrested_gene = siggene,
+                      input_directory = input_directory)
+
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

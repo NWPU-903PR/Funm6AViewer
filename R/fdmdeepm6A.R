@@ -18,6 +18,9 @@ fdmdeepm6A <- function(DMgene,
   DMgene <- .getgenesymbol(orgsymbol, DMgene)
   DMgene <- DMgene$genesymbol
 
+  degenes <- .getgenesymbol(orgsymbol, names(descore))
+  names(descore) <- degenes$genesymbol
+
   load(paste(datapath, "net.RData", sep = "/"))
   load(paste(datapath, "netmotif.RData", sep = "/"))
 
