@@ -59,7 +59,7 @@ funm6aviewer <- function(dminfo,
                      savepath = savepath1, txdb = txdb, orgsymbol = orgsymbol, orgdb = orgdb)
 
     ## plot coverage
-    if (!is.na(bamgrlist[1])) {
+    if (!is.na(bamgrlist)[1]) {
       vp <- coverageplot(dminfo, bamgrlist, intrested_gene = intrested_gene,
                          savepath = savepath1, txdb = txdb, orgsymbol = orgsymbol, orgdb = orgdb)
     }

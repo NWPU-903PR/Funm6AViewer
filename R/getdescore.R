@@ -7,7 +7,7 @@ getdescore <- function(deseqre,
   if (scoretype == "pval") {
     descore <- deseqre$pval
   } else {
-    descore <- deseqre$padj
+    descore <- as.numeric(deseqre$padj)
   }
 
   dename <- deseqre$name

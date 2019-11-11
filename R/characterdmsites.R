@@ -6,8 +6,17 @@ characterdmsites <- function(dmgr,
 
   if (is.na(savepath)) {savepath <- getwd()}
 
+  if (ncol(dmgr) < 9) {
+    genesymbol <- .getgenesymbol(orgsymbol, dmgr$name)
+    genesymbol <- genesymbol$genesymbol
+    dmgr$genesymbol <- genesymbol
+    dmgr$foldenrich <- "hyper"
+    dmgr$foldenrich[dmgr$log2fd < 0] <- "hypo"
+    dmgr <- .getpeakposition(dmgr, txdb)
+  }
+
   gr <-  GRanges(seqnames = dmgr$chr,
-                 IRanges(start = dmgr$chromEnd, width = 1),
+                 IRanges(start = (dmgr$chromStart + 1), end = dmgr$chromEnd),
                  strand = dmgr$strand)
   mcols(gr) <- dmgr
 

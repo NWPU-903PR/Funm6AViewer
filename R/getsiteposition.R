@@ -5,7 +5,7 @@
   comp <- .extractComponent(txdb)
 
   peak_gr <- GRanges(as.character(peak$chr),
-                     IRanges(as.numeric(peak$chromEnd), width = 1),
+                     IRanges(start = (peak$chromStart + 1), end = peak$chromEnd),
                      as.character(peak$strand))
 
   utr3_peak <- countOverlaps(peak_gr, comp$utr3)

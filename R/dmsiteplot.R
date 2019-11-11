@@ -21,8 +21,10 @@ dmsiteplot <- function(dminfo,
 
   dmanno <- dminfo
   dmgr <-  GRanges(seqnames = dminfo$chr,
-                   IRanges(start = dminfo$chromEnd, width = 1),
+                   IRanges(start = (dminfo$chromStart + 1), end = dminfo$chromEnd),
                    strand = dminfo$strand)
+  dmgr <- resize(dmgr, width = 1, fix = "center")
+
   mcols(dmgr) <- dmanno[, c(4, 5, 7, 8, 9)]
 
   for (i in 1:length(intrested_gene)) {
