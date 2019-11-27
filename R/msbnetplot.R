@@ -15,6 +15,7 @@ msbnetplot <- function(genesymbol,
 
   dmgene <- .getgenesymbol(orgsymbol, dmgene)
   dmgene <- dmgene$genesymbol
+  dmgene <- dmgene[!is.na(dmgene)]
 
   degenes <- .getgenesymbol(orgsymbol, names(descore))
   names(descore) <- degenes$genesymbol
@@ -78,6 +79,8 @@ msbnetplot <- function(genesymbol,
 
   nodesize <- descore[match(dmnode, names(descore))]
   nodesize[is.na(nodesize)] <- min(nodesize, na.rm = T)
+  nodesize[nodesize == 0] <- max(nodesize) + 1
+  nodesize[nodesize == max(nodesize)] <- min(nodesize)
 
   nodetype <- rep("Other", length(dmnode))
   nodetype[is.element(dmnode, pathind)] <- "PathGene"
