@@ -147,8 +147,8 @@ fdmdeepm6A <- function(DMgene,
     rdmdescore[i] <- rank[DMind[i],i]
   }
 
-  names(dmdescore) <- netid$gene_name[DMind]
   dmdescore <- data.frame(DEScore = dmdescore, RawDEScore = rdmdescore)
+  row.names(dmdescore) <- netid$gene_name[DMind]
 
   return(dmdescore)
 }
