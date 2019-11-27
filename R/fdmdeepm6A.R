@@ -12,12 +12,13 @@ fdmdeepm6A <- function(DMgene,
                        no_cores = NA) {
 
   if (is.na(datapath)) { datapath <- system.file("extdata", package="Funm6AViewer") }
-  if (sum(UTR5only) == 0) {UTR5only <- rep(0, length(DMgene))}
-  if (sum(UTR5only) == 1) {UTR5only <- rep(1, length(DMgene))}
 
   DMgene <- .getgenesymbol(orgsymbol, DMgene)
   DMgene <- DMgene$genesymbol
   DMgene <- DMgene[!is.na(DMgene)]
+
+  if (sum(UTR5only) == 0) {UTR5only <- rep(0, length(DMgene))}
+  if (sum(UTR5only) == 1) {UTR5only <- rep(1, length(DMgene))}
 
   degenes <- .getgenesymbol(orgsymbol, names(descore))
   names(descore) <- degenes$genesymbol
