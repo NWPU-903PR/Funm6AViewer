@@ -17,7 +17,7 @@ fdmdeepm6A <- function(DMgene,
 
   DMgene <- .getgenesymbol(orgsymbol, DMgene)
   DMgene <- DMgene$genesymbol
-  DMgene <- !is.na(DMgene)
+  DMgene <- DMgene[!is.na(DMgene)]
 
   degenes <- .getgenesymbol(orgsymbol, names(descore))
   names(descore) <- degenes$genesymbol
