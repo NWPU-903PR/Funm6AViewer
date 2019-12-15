@@ -24,11 +24,6 @@ funm6aviewer <- function(dminfo,
 
   if (is.na(savepath)) { savepath <- getwd() }
   if (is.na(datapath)) { datapath <- system.file("extdata", package="Funm6AViewer") }
-  if (!is.na(intrested_gene[1])) {
-    siggene <- .getgenesymbol(orgsymbol, intrested_gene)
-    entrezid <- siggene$entrezeid
-    siggene <- siggene$genesymbol
-  }
 
   ## get dm annotation and de score
 
@@ -38,6 +33,18 @@ funm6aviewer <- function(dminfo,
   dminfo$foldenrich <- "hyper"
   dminfo$foldenrich[dminfo$log2fd < 0] <- "hypo"
   dminfo <- .getpeakposition(dminfo, txdb)
+
+  if (!is.na(intrested_gene[1])) {
+    siggene <- .getgenesymbol(orgsymbol, intrested_gene)
+    entrezid <- siggene$entrezeid
+    siggene <- siggene$genesymbol
+
+    id <- is.element(entrezid, dminfo$name) & is.element(siggene, dminfo$genesymbol)
+    intrested_gene <- intrested_gene[id]
+    siggene <- siggene[id]
+  }
+
+  if (length(intrested_gene) == 0) {intrested_gene <- NA}
 
   genesymbol <- .getgenesymbol(orgsymbol, deinfo$name)
   genesymbol <- genesymbol$genesymbol
