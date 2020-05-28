@@ -92,7 +92,7 @@ datapath <- "F:/Funm6A_package/data"
 enrich_input_directory <- "F:/Funm6A_package/data"
 
 savepath <- getwd()
-re <- funm6aviewer(dminfo, deinfo, grlist, intrested_gene =  siggene, permutime = permutime,
+re <- funm6aviewer(dminfo, deinfo, grlist, intrested_gene =  siggene, permutime = permutime, version = "11",
                    datapath = datapath, enrich_input_directory = enrich_input_directory, savepath = savepath)
 ```
 The results will be saved to `savepath`.
@@ -184,7 +184,8 @@ The `input_directory` is the filepath passed to string_db, the GO and KEGG funct
 ```{r}
 input_directory <- "F:/Funm6A_package/data"
 
-re <- siggenepathplot(fdmgene = fdmgene, intrested_gene = siggene, input_directory = input_directory)
+re <- siggenepathplot(fdmgene = fdmgene, intrested_gene = siggene, 
+                      version = "11", input_directory = input_directory)
 ```
 
 ## 8. MSB net plot for interested FDmMGenes
