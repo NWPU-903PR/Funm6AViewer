@@ -89,19 +89,22 @@ funm6aviewer <- function(dminfo,
   print("Running FunDMDeepm6A for genes with UTR3 DmM sites...")
   ## utr3
   DMgene <- dmgene$utr3
-  fdm_utr3 <- fdmdeepm6A(DMgene, descore, datapath = datapath, savepath = savepath2, permutime = permutime,
+  fdm_utr3 <- fdmdeepm6A(DMgene, descore, datapath = datapath, savepath = savepath2,
+                         orgsymbol = orgsymbol, permutime = permutime,
                          savename = "Funm6AGene_utr3.xls", no_cores = no_cores)
 
   print("Running FunDMDeepm6A for genes with CDS DmM sites...")
   ## cds
   DMgene <- dmgene$cds
-  fdm_cds <- fdmdeepm6A(DMgene, descore, datapath = datapath, savepath = savepath2, permutime = permutime,
+  fdm_cds <- fdmdeepm6A(DMgene, descore, datapath = datapath, savepath = savepath2,
+                        orgsymbol = orgsymbol, permutime = permutime,
                         savename = "Funm6AGene_cds.xls", no_cores = no_cores)
 
   print("Running FunDMDeepm6A for genes with UTR5 DmM sites...")
   ## utr5
   DMgene <- dmgene$utr5
-  fdm_utr5 <- fdmdeepm6A(DMgene, descore, datapath = datapath, savepath = savepath2, permutime = permutime,
+  fdm_utr5 <- fdmdeepm6A(DMgene, descore, datapath = datapath, savepath = savepath2,
+                         orgsymbol = orgsymbol, permutime = permutime,
                          savename = "Funm6AGene_utr5.xls", UTR5only = TRUE, no_cores = no_cores)
 
   ## combine result
