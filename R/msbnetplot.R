@@ -85,9 +85,9 @@ msbnetplot <- function(genesymbol,
     nodesize[nodesize == max(nodesize)] <- min(nodesize)
 
     nodetype <- rep("Other", length(dmnode))
-    nodetype[is.element(dmnode, pathind)] <- "PathGene"
-    nodetype[is.element(dmnode, dmgene)] <- "DmMGene"
-    nodetype[is.element(dmnode, genesymbol)] <- "FunDmMGene"
+    nodetype[is.element(toupper(dmnode), toupper(pathind))] <- "PathGene"
+    nodetype[is.element(toupper(dmnode), toupper(dmgene))] <- "DmMGene"
+    nodetype[is.element(toupper(dmnode), toupper(genesymbol))] <- "FunDmMGene"
 
     dmnode <- data.frame(id = dmnode, nodesize = nodesize, nodetype = nodetype)
 
