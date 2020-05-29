@@ -79,7 +79,7 @@ msbnetplot <- function(genesymbol,
     ed <- data.frame(ed)
     names(ed) <- c("from", "to", "weight")
 
-    nodesize <- descore[match(dmnode, names(descore))]
+    nodesize <- descore[match(toupper(dmnode), toupper(names(descore)))]
     nodesize[is.na(nodesize)] <- min(nodesize, na.rm = T)
     nodesize[nodesize == 0] <- max(nodesize) + 1
     nodesize[nodesize == max(nodesize)] <- min(nodesize)
