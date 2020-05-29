@@ -28,6 +28,7 @@ funm6aviewer <- function(dminfo,
   ## get dm annotation and de score
 
   genesymbol <- .getgenesymbol(orgsymbol, dminfo$name)
+  dminfo$name <- genesymbol$entrezeid
   genesymbol <- genesymbol$genesymbol
   dminfo$genesymbol <- genesymbol
   dminfo$foldenrich <- "hyper"
