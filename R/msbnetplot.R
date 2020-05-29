@@ -56,82 +56,86 @@ msbnetplot <- function(genesymbol,
   pathind <- unique(pathind)
 
   dmnode <- unique(dmnodel)
-  len <- length(dmnode)
-  ag <- matrix(0, nrow = len, ncol=len)
-  ed <- cbind(match(dmedgel[,1], dmnode), match(dmedgel[,2], dmnode))
-  for(h in 1:nrow(ed)) {
-    ag[ed[h,1],ed[h,2]] <- 1 + ag[ed[h,1],ed[h,2]]
-    ag[ed[h,2],ed[h,1]] <- 1 + ag[ed[h,2],ed[h,1]]
-  }
 
-  rownames(ag) <- dmnode
-  ag[ag < 2] <- 0
-  s <- rowSums(ag) != 0
-  ag <- ag[s,s]
-  ag[lower.tri(ag)] <- 0
+  if (length(dmnode) != 0) {
 
-  dmnode <- rownames(ag)
-  edind <- which(ag!=0, arr.ind = T)
-  w <- ag[edind]
-  ed <- cbind(dmnode[edind[,1]], dmnode[edind[,2]], w)
-  ed <- data.frame(ed)
-  names(ed) <- c("from", "to", "weight")
-
-  nodesize <- descore[match(dmnode, names(descore))]
-  nodesize[is.na(nodesize)] <- min(nodesize, na.rm = T)
-  nodesize[nodesize == 0] <- max(nodesize) + 1
-  nodesize[nodesize == max(nodesize)] <- min(nodesize)
-
-  nodetype <- rep("Other", length(dmnode))
-  nodetype[is.element(dmnode, pathind)] <- "PathGene"
-  nodetype[is.element(dmnode, dmgene)] <- "DmMGene"
-  nodetype[is.element(dmnode, genesymbol)] <- "FunDmMGene"
-
-  dmnode <- data.frame(id = dmnode, nodesize = nodesize, nodetype = nodetype)
-
-  ## generat igraph
-  net <- graph_from_data_frame(d=ed, vertices=dmnode, directed=F)
-
-  # Generate colors based on node type:
-  colrs <- c("tomato", "gray70", "lightgreen", "orange")
-  V(net)$color <- colrs[factor(V(net)$nodetype, levels = c("FunDmMGene", "Other", "PathGene", "DmMGene"))]
-  V(net)$frame.color <- NA
-
-
-  # set node size based on nodesize:
-  nodesize <- V(net)$nodesize/min(V(net)$nodesize) + 1
-  V(net)$size <- log(nodesize)/max(log(nodesize))*10
-
-  vertexlabelfont <- 4
-  if (labeloff | nrow(dmnode) > 150) {
-    V(net)$label <- rep(NA, length(V(net)$name))
-    V(net)$label[V(net)$color == "tomato"] <-  V(net)$name[V(net)$color == "tomato"]
-    vertexlabelfont <- 16
+    len <- length(dmnode)
+    ag <- matrix(0, nrow = len, ncol=len)
+    ed <- cbind(match(dmedgel[,1], dmnode), match(dmedgel[,2], dmnode))
+    for(h in 1:nrow(ed)) {
+      ag[ed[h,1],ed[h,2]] <- 1 + ag[ed[h,1],ed[h,2]]
+      ag[ed[h,2],ed[h,1]] <- 1 + ag[ed[h,2],ed[h,1]]
     }
 
-  # Set edge width based on weight:
-  E(net)$width <- as.numeric(E(net)$weight)/2
+    rownames(ag) <- dmnode
+    s <- rowSums(ag) != 0
+    ag <- ag[s,s]
+    ag[lower.tri(ag)] <- 0
 
-  # We can even set the network layout:
-  l <- layout_with_fr(net)
-  plot(net, vertex.label.font = vertexlabelfont, vertex.label.color = "gray30",
-       vertex.label.cex = .7, edge.color = "gray75", layout = l)
-  legend(x=-1, y=-1.1, c("FocusedGene", "OtherGene", "PathGene", "DmMGene"), pch=21,
-         col = NA, pt.bg=colrs, pt.cex=2, cex=.8, bty="n", ncol=2)
+    dmnode <- rownames(ag)
+    edind <- which(ag!=0, arr.ind = T)
+    w <- ag[edind]
+    ed <- cbind(dmnode[edind[,1]], dmnode[edind[,2]], w)
+    ed <- data.frame(ed)
+    names(ed) <- c("from", "to", "weight")
 
-  if (is.na(plotsize)) {
-    if (nrow(dmnode) <= 50) {plotsize <- 6}
-    if (nrow(dmnode) > 50) {plotsize <- 8}
-    if (nrow(dmnode) > 100) {plotsize <- 10}
+    nodesize <- descore[match(dmnode, names(descore))]
+    nodesize[is.na(nodesize)] <- min(nodesize, na.rm = T)
+    nodesize[nodesize == 0] <- max(nodesize) + 1
+    nodesize[nodesize == max(nodesize)] <- min(nodesize)
+
+    nodetype <- rep("Other", length(dmnode))
+    nodetype[is.element(dmnode, pathind)] <- "PathGene"
+    nodetype[is.element(dmnode, dmgene)] <- "DmMGene"
+    nodetype[is.element(dmnode, genesymbol)] <- "FunDmMGene"
+
+    dmnode <- data.frame(id = dmnode, nodesize = nodesize, nodetype = nodetype)
+
+    ## generat igraph
+    net <- graph_from_data_frame(d=ed, vertices=dmnode, directed=F)
+
+    # Generate colors based on node type:
+    colrs <- c("tomato", "gray70", "lightgreen", "orange")
+    V(net)$color <- colrs[factor(V(net)$nodetype, levels = c("FunDmMGene", "Other", "PathGene", "DmMGene"))]
+    V(net)$frame.color <- NA
+
+
+    # set node size based on nodesize:
+    nodesize <- V(net)$nodesize/min(V(net)$nodesize) + 1
+    V(net)$size <- log(nodesize)/max(log(nodesize))*10
+
+    vertexlabelfont <- 4
+    if (labeloff | nrow(dmnode) > 150) {
+      V(net)$label <- rep(NA, length(V(net)$name))
+      V(net)$label[V(net)$color == "tomato"] <-  V(net)$name[V(net)$color == "tomato"]
+      vertexlabelfont <- 16
+    }
+
+    # Set edge width based on weight:
+    E(net)$width <- as.numeric(E(net)$weight)/2
+
+    # We can even set the network layout:
+    l <- layout_with_fr(net)
+    plot(net, vertex.label.font = vertexlabelfont, vertex.label.color = "gray30",
+         vertex.label.cex = .7, edge.color = "gray75", layout = l)
+    legend(x=-1, y=-1.1, c("FocusedGene", "OtherGene", "PathGene", "DmMGene"), pch=21,
+           col = NA, pt.bg=colrs, pt.cex=2, cex=.8, bty="n", ncol=2)
+
+    if (is.na(plotsize)) {
+      if (nrow(dmnode) <= 50) {plotsize <- 6}
+      if (nrow(dmnode) > 50) {plotsize <- 8}
+      if (nrow(dmnode) > 100) {plotsize <- 10}
+    }
+
+    pdf(file = paste(savepath, "/", savename, "_MSBNet.pdf", sep = ""), width = plotsize, height = plotsize)
+    plot(net, vertex.label.font = vertexlabelfont, vertex.label.color = "gray30",
+         vertex.label.cex = .7, edge.color = "gray75", layout = l)
+    legend(x=-1, y=-1.1, c("FocusedGene", "OtherGene", "PathGene", "DmMGene"), pch=21,
+           col = NA, pt.bg=colrs, pt.cex=2, cex=.8, bty="n", ncol=2)
+    dev.off()
+
+    return(net)
   }
 
-  pdf(file = paste(savepath, "/", savename, "_MSBNet.pdf", sep = ""), width = plotsize, height = plotsize)
-  plot(net, vertex.label.font = vertexlabelfont, vertex.label.color = "gray30",
-       vertex.label.cex = .7, edge.color = "gray75", layout = l)
-  legend(x=-1, y=-1.1, c("FocusedGene", "OtherGene", "PathGene", "DmMGene"), pch=21,
-         col = NA, pt.bg=colrs, pt.cex=2, cex=.8, bty="n", ncol=2)
-  dev.off()
-
-  return(net)
 }
 

@@ -41,8 +41,8 @@ funm6aviewer <- function(dminfo,
     siggene <- siggene$genesymbol
 
     id <- is.element(entrezid, dminfo$name) & is.element(siggene, dminfo$genesymbol)
-    intrested_gene <- intrested_gene[id]
     siggene <- siggene[id]
+    intrested_gene <- siggene
   }
 
   if (length(intrested_gene) == 0) {intrested_gene <- NA}
@@ -119,25 +119,26 @@ funm6aviewer <- function(dminfo,
   write.table(fdmgene, file =  paste(savepath2, "Funm6AGene.xls", sep = "/"), sep = "\t", row.names = FALSE, quote = FALSE)
 
   print("Visualizing functional DmM genes...")
+
+  savepath3 <- paste(savepath, "MSBScorePlot", sep = "/")
+  dir.create(savepath3)
+
+  ## plot MSB score
+  siggenescoreplot(fdm_utr3, intrested_gene, plotname = "UTR3_Gene", sigthresh = fungenethr, savepath = savepath3,
+                   rescore_thr = rescore_thr, descore_thr = descore_thr)
+  siggenescoreplot(fdm_utr5, intrested_gene, plotname = "UTR5_Gene", sigthresh = fungenethr, savepath = savepath3,
+                   rescore_thr = rescore_thr, descore_thr = descore_thr)
+  siggenescoreplot(fdm_cds, intrested_gene, plotname = "CDS_Gene", sigthresh = fungenethr, savepath = savepath3,
+                   rescore_thr = rescore_thr, descore_thr = descore_thr)
+
   if (!is.na(intrested_gene[1])) {
-    savepath3 <- paste(savepath, "MSBScorePlot", sep = "/")
-    dir.create(savepath3)
-
-    ## plot MSB score
-    siggenescoreplot(fdm_utr3, siggene, plotname = "UTR3_Gene", sigthresh = fungenethr, savepath = savepath3,
-                     rescore_thr = rescore_thr, descore_thr = descore_thr)
-    siggenescoreplot(fdm_utr5, siggene, plotname = "UTR5_Gene", sigthresh = fungenethr, savepath = savepath3,
-                     rescore_thr = rescore_thr, descore_thr = descore_thr)
-    siggenescoreplot(fdm_cds, siggene, plotname = "CDS_Gene", sigthresh = fungenethr, savepath = savepath3,
-                     rescore_thr = rescore_thr, descore_thr = descore_thr)
-
     savepath4 <- paste(savepath, "MSBNetPlot", sep = "/")
     dir.create(savepath4)
 
     ## plot MSB net
     dmgene <- unique(as.character(fdmgene$DMgene))
-    netl <- lapply(as.list(siggene), msbnetplot, dmgene, descore, orgsymbol, datapath, savepath4)
-    net <- msbnetplot(siggene, dmgene, descore, orgsymbol, datapath, savepath = savepath4, savename = "SigGene", labeloff = T)
+    netl <- lapply(as.list(intrested_gene), msbnetplot, dmgene, descore, orgsymbol, datapath, savepath4)
+    net <- msbnetplot(intrested_gene, dmgene, descore, orgsymbol, datapath, savepath = savepath4, savename = "SigGene", labeloff = T)
   }
 
   ## plot enrichment
@@ -151,7 +152,7 @@ funm6aviewer <- function(dminfo,
   if (!is.na(intrested_gene[1])) {
 
     genelist <- as.character(fdmgene$DMgene)
-    siggenepathplot(genelist, siggene, bp_fdr_thr = bp_fdr_thr, kegg_fdr_thr = kegg_fdr_thr,
+    siggenepathplot(genelist, intrested_gene, bp_fdr_thr = bp_fdr_thr, kegg_fdr_thr = kegg_fdr_thr,
                     input_directory = enrich_input_directory, version = version, species = species, savepath = savepath5)
   }
 
