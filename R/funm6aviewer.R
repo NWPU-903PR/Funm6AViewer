@@ -153,7 +153,8 @@ funm6aviewer <- function(dminfo,
 
     genelist <- as.character(fdmgene$DMgene)
     siggenepathplot(genelist, intrested_gene, bp_fdr_thr = bp_fdr_thr, kegg_fdr_thr = kegg_fdr_thr,
-                    input_directory = enrich_input_directory, version = version, species = species, savepath = savepath5)
+                    input_directory = enrich_input_directory, version = version, species = species,
+                    orgsymbol = orgsymbol, savepath = savepath5)
   }
 
   re <- list(dmgene = dminfo,
