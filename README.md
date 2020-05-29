@@ -95,7 +95,7 @@ savepath <- getwd()
 re <- funm6aviewer(dminfo, deinfo, grlist, intrested_gene =  siggene, permutime = permutime, version = "11",
                    datapath = datapath, enrich_input_directory = enrich_input_directory, savepath = savepath)
 ```
-The 'version' parameter is passed to STRINGdb, it depends on which version is supported by STRINGdb. The results will be saved to `savepath`.
+The `version` parameter is passed to STRINGdb, it depends on which version is supported by STRINGdb. The results will be saved to `savepath`.
 
 ## 4. DmM sites plot for interested gene 
 
