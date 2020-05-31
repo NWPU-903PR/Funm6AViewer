@@ -92,7 +92,7 @@ datapath <- "F:/Funm6A_package/data"
 enrich_input_directory <- "F:/Funm6A_package/data"
 
 savepath <- getwd()
-re <- funm6aviewer(dminfo, deinfo, grlist, intrested_gene =  siggene, permutime = permutime, version = "11",
+re <- funm6aviewer(dminfo, deinfo, grlist, intrested_gene =  siggene, permutime = permutime, version = "10",
                    datapath = datapath, enrich_input_directory = enrich_input_directory, savepath = savepath)
 ```
 The `version` parameter is passed to STRINGdb, it depends on which version is supported by STRINGdb. The results will be saved to `savepath`.
