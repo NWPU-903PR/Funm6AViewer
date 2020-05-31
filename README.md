@@ -10,13 +10,13 @@ Install the required packages
 if (!requireNamespace("BiocManager", quietly = TRUE)) 
   install.packages("BiocManager")
 
-BiocManager::install("GenomicFeatures")
-BiocManager::install("Guitar")
-BiocManager::install("trackViewer")
-BiocManager::install("DESeq2")
-BiocManager::install("STRINGdb")
-BiocManager::install("TxDb.Hsapiens.UCSC.hg19.knownGene")
-BiocManager::install("org.Hs.eg.db")
+BiocManager::install("GenomicFeatures", version = "3.10")
+BiocManager::install("Guitar", version = "3.10")
+BiocManager::install("trackViewer", version = "3.10")
+BiocManager::install("DESeq2", version = "3.10")
+BiocManager::install("STRINGdb", version = "3.10")
+BiocManager::install("TxDb.Hsapiens.UCSC.hg19.knownGene", version = "3.10")
+BiocManager::install("org.Hs.eg.db", version = "3.10")
 ```
 
 Install Funm6AViewer
