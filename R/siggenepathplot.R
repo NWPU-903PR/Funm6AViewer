@@ -44,7 +44,10 @@ siggenepathplot <- function(fdmgene,
     enrichmentGO_sig <- enrichmentGO_sig[1:n,]
 
     savename <- paste(savepath, "BP", sep = "/")
-    .pathwayplot(genename, enrichmentGO_sig, savename)
+    if (n > 0) {
+      .pathwayplot(genename, enrichmentGO_sig, savename)
+    }
+
 
     enrichmentKEGG_sig <- string_db$get_enrichment(sighits$STRING_id[i], category = "KEGG", methodMT = "fdr", iea = TRUE)
     enrichmentKEGG_sig <- enrichmentKEGG[is.element(enrichmentKEGG$term_id, enrichmentKEGG_sig$term_id),]
@@ -53,7 +56,9 @@ siggenepathplot <- function(fdmgene,
     enrichmentKEGG_sig <- enrichmentKEGG_sig[1:n,]
 
     savename <- paste(savepath, "KEGG", sep = "/")
-    .pathwayplot(genename, enrichmentKEGG_sig, savename)
+    if (n > 0) {
+      .pathwayplot(genename, enrichmentKEGG_sig, savename)
+    }
   }
 
   write.table(enrichmentGO, file =  paste(savepath, "BP_enrichment.xls", sep = "/"),
