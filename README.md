@@ -10,7 +10,7 @@ Install the required packages
 if (!requireNamespace("BiocManager", quietly = TRUE)) 
   install.packages("BiocManager")
 
-BiocManager::install(c("GenomicFeatures", "Guitar", "trackViewer", "DESeq2", "STRINGdb",    
+BiocManager::install(c("GenomicFeatures", "Guitar", "trackViewer", "DESeq2", "apeglm", "STRINGdb",    
                        "TxDb.Hsapiens.UCSC.hg19.knownGene", "org.Hs.eg.db"), version = "3.10")
 ```
 
