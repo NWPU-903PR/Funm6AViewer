@@ -60,7 +60,7 @@ dminfo <- read.table(dminfo, header = TRUE, stringsAsFactors = FALSE)
 deinfo <- read.delim(deinfo, header = TRUE, stringsAsFactors = FALSE)
 ```
 
-`dminfo` contains the position annotation and log2 foldchange of DmM sites. It can be extracted from the result of DMDeep-m6A package using `summarydmdeepm6A` (see [9.2](https://github.com/NWPU-903PR/Funm6AViewer#92-making-input-for-funm6aviewer). Alternatively, users can use any other method to make it as the following formate: 
+`dminfo` contains the position annotation and log2 foldchange of DmM sites. It can be extracted from the result of DMDeep-m6A package using `summarydmdeepm6A` (see [9.2](https://github.com/NWPU-903PR/Funm6AViewer#92-making-input-for-funm6aviewer) for more details). Alternatively, users can use any other method to make it as the following formate: 
 ```{r}
 head(dminfo)
 ##    chr chromStart  chromEnd  name     score strand    log2fd
@@ -73,7 +73,7 @@ head(dminfo)
 ```
 The 'name' column can be entrez gene ID or gene symbol.
 
-`deinfo` contains the differential expresion p-value and fdr for genes. It can be made using `makegrreadsfrombam` and `getdeinfo` (see 9.2 for more details), or users can use any other method to make it as the following formate:
+`deinfo` contains the differential expresion p-value and fdr for genes. It can be made using `makegrreadsfrombam` and `getdeinfo` (see [9.2](https://github.com/NWPU-903PR/Funm6AViewer#92-making-input-for-funm6aviewer) for more details), or users can use any other method to make it as the following formate:
 ```{r}
 head(deinfo)
 ##        name         pval         padj
@@ -86,7 +86,7 @@ head(deinfo)
 ```
 The 'name' column can be entrez gene ID or gene symbol.
 
-`bamreadsgr` can be generated using `makegrreadsfrombam` from the MeRIP-Seq data in bam formate (see 9.2 for more details).
+`bamreadsgr` can be generated using `makegrreadsfrombam` from the MeRIP-Seq data in bam formate (see [9.2](https://github.com/NWPU-903PR/Funm6AViewer#92-making-input-for-funm6aviewer) for more details).
 ```{r, eval=FALSE}
 bamreadsgr <- system.file("extdata", "bamgrlist_toy.RData", package="Funm6AViewer")
 load(bamreadsgr)
