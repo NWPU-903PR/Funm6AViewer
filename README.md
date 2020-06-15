@@ -92,6 +92,31 @@ re <- funm6aviewer(dminfo, deinfo, grlist, intrested_gene =  siggene, permutime 
 ```
 The `version` parameter is passed to STRINGdb, it depends on which version is supported by STRINGdb. The results will be saved to `savepath`.
 
+If you are using other genomes, you need to install txdb and orgdb annotation for the corresponding genome. Taking mouse mm9 genome as an example, you should firstly install the genome annotation:
+```{r}
+if (!requireNamespace("BiocManager", quietly = TRUE))    
+    install.packages("BiocManager")
+    
+BiocManager::install(c("TxDb.Mmusculus.UCSC.mm9.knownGene",    
+                       "org.Mm.eg.db"))
+```                    
+And assign the annotation to `txdb`, `orgdb` and `orgsymbol` when running funm6aviewer:
+```{r}
+library(TxDb.Mmusculus.UCSC.mm9.knownGene)
+library(org.Mm.eg.db)
+re <- funm6aviewer(dminfo = dminfo,    
+                   deinfo = deinfo,    
+                   grlist = grlist,    
+                   intrested_gene =  siggene,    
+                   txdb = TxDb.Mmusculus.UCSC.mm9.knownGene,    
+                   orgdb = org.Mm.eg.db,    
+                   orgsymbol = org.Mm.egSYMBOL,    
+                   permutime = permutime,    
+                   datapath = datapath,    
+                   enrich_input_directory = enrich_input_directory,    
+                   savepath = savepath)
+```
+
 ## 4. DmM sites plot for interested gene 
 
 Users can use `dmsiteplot` to visaulize the DmM sites on their interested genes and their isoforms.
