@@ -60,7 +60,7 @@ dminfo <- read.table(dminfo, header = TRUE, stringsAsFactors = FALSE)
 deinfo <- read.delim(deinfo, header = TRUE, stringsAsFactors = FALSE)
 ```
 
-`dminfo` contains the position annotation and log2 foldchange of DmM sites. It can be extracted from the result of DMDeep-m6A package using `summarydmdeepm6A` (see 9.2 for more details). Alternatively, users can use any other method to make it as the following formate: 
+`dminfo` contains the position annotation and log2 foldchange of DmM sites. It can be extracted from the result of DMDeep-m6A package using `summarydmdeepm6A` (see ### 9.2 for more details). Alternatively, users can use any other method to make it as the following formate: 
 ```{r}
 head(dminfo)
 ##    chr chromStart  chromEnd  name     score strand    log2fd
