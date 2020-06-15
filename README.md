@@ -60,19 +60,33 @@ dminfo <- read.table(dminfo, header = TRUE, stringsAsFactors = FALSE)
 deinfo <- read.delim(deinfo, header = TRUE, stringsAsFactors = FALSE)
 ```
 
-`dminfo` contains the position annotation and log2 foldchange of DmM sites. It can be extracted from the result of DMDeep-m6A package using `summarydmdeepm6A`. Alternatively, users can use any other method to make it as the following formate: 
+`dminfo` contains the position annotation and log2 foldchange of DmM sites. It can be extracted from the result of DMDeep-m6A package using `summarydmdeepm6A` (see 9.2 for more details). Alternatively, users can use any other method to make it as the following formate: 
 ```{r}
 head(dminfo)
+##    chr chromStart  chromEnd  name     score strand    log2fd
+## 1 chr1  155160832 155160833  4582 0.9137714      - 2.7950754
+## 2 chr1  171505224 171505225 23215 0.9431386      + 0.7589479
+## 3 chr1  241767682 241767683 23596 0.8125095      - 1.0680801
+## 4 chr1  243418399 243418400  9859 0.9652586      - 1.7805035
+## 5 chr1    8073372   8073373 54206 0.8477583      - 2.5678589
+## 6 chr1    8073689   8073690 54206 0.8089832      - 1.1375522
 ```
 The 'name' column can be entrez gene ID or gene symbol.
 
-`deinfo` contains the differential expresion p-value and fdr for genes. It can be made using `makegrreadsfrombam` and `getdeinfo`, or users can use any other method to make it as the following formate:
+`deinfo` contains the differential expresion p-value and fdr for genes. It can be made using `makegrreadsfrombam` and `getdeinfo` (see 9.2 for more details), or users can use any other method to make it as the following formate:
 ```{r}
 head(deinfo)
+##        name         pval         padj
+## 1         1 7.578860e-01 8.990406e-01
+## 2       100 6.958592e-01 8.695820e-01
+## 3      1000 4.155368e-06 6.420489e-05
+## 4     10000 2.043250e-02 9.424864e-02
+## 5 100009676 4.524888e-01 7.148682e-01
+## 6     10001 6.708161e-01 8.566831e-01
 ```
 The 'name' column can be entrez gene ID or gene symbol.
 
-`bamreadsgr` can be generated using `makegrreadsfrombam` from the MeRIP-Seq data in bam formate.
+`bamreadsgr` can be generated using `makegrreadsfrombam` from the MeRIP-Seq data in bam formate (see 9.2 for more details).
 ```{r, eval=FALSE}
 bamreadsgr <- system.file("extdata", "bamgrlist_toy.RData", package="Funm6AViewer")
 load(bamreadsgr)
@@ -241,3 +255,111 @@ plot for several FDmMGnes:
 re <- msbnetplot(genesymbol = siggene, dmgene = dmgene, descore = descore, datapath = datapath,
                  savename = "InterestedGene")
 ```
+
+## 9. Functional m6A analysis pipline from bam files
+
+We introduced this pipeline using a pretend example MeRIP-Seq data which contains 2 replicates in bam format for each condition (untreated and treated), named as:
+
+                             "untreated_input_rep1.bam","untreated_ip_rep1.bam",     
+                             "untreated_input_rep2.bam", "untreated_ip_rep2.bam",     
+                               "treated_input_rep1.bam", "treated_ip_replicate1.bam",     
+                               "treated_input_rep2.bam", "treated_ip_rep2.bam".    
+                               
+These bam format files can be obtained by aligning the raw sequenced MeRIP-Seq data to genome, i.e., human hg19 using splice junction mapping tools for RNA-Seq reads, like TopHat, HISAT or STAR.
+
+### 9.1 Calling differential m6A methylation sites using DMDeepm6A
+
+Users can firstly call single base differential m6A methylation (DmM) sites using DMDeepm6A R package (https://github.com/NWPU-903PR/DMDeepm6A1.0) as following:
+```{r}
+library(DMDeepm6A)
+ip_bams <- c("treated_ip_rep1.bam"," treated_ip_rep2.bam",     
+             "untreated_ip_rep1.bam ", "untreated_ip_rep2.bam")     
+input_bams <- c("treated_input_rep1.bam","treated_input_rep2.bam",     
+                "untreated_input_rep1.bam", "untreated_input_rep2.bam")    
+sample_condition <- c("treated", "treated", "untreated", "untreated")    
+```
+Assuming the aligned genome is hg19, users can call DmM sites as following:
+```{r}
+output_filepath <- getwd()    
+re <- dmdeepm6A(ip_bams = ip_bams,    
+                input_bams = input_bams,    
+                sample_conditions = sample_condition,    
+                output_filepath = output_filepath,    
+                experiment_name = "DMDeepm6A_out")
+```
+See `?dmdeepm6A` for more details if you are using other genomes. The `experiment_name` is the name of the file folder where saved the result of `dmdeepm6A`.
+
+### 9.2 Making input for Funm6AViewer
+
+Funm6AViewer takes single base DmM sites information, gene DE information as input and a list of `GRanges` converted from MeRIP-Seq bam files using `makegrreadsfrombam` if users would like to see the reads coverage of interested DmM sites on gene. Single base DmM sites information named `dminfo` contains the position annotation and log2 foldchange of DmM sites. It can be extracted from the result of `DMDeepm6A` using `summarydmdeepm6A` as following:
+```{r}
+dminfo <- summarydmdeepm6A(dmpath = " DMDeepm6A_out", sigthresh = 0.05)
+```
+`dminfo` contains the following information:
+```{r}
+head(dminfo)
+##    chr chromStart  chromEnd  name     score strand    log2fd
+## 1 chr1  155160832 155160833  4582 0.9137714      - 2.7950754
+## 2 chr1  171505224 171505225 23215 0.9431386      + 0.7589479
+## 3 chr1  241767682 241767683 23596 0.8125095      - 1.0680801
+## 4 chr1  243418399 243418400  9859 0.9652586      - 1.7805035
+## 5 chr1    8073372   8073373 54206 0.8477583      - 2.5678589
+## 6 chr1    8073689   8073690 54206 0.8089832      - 1.1375522
+```
+The ‘name’ column can be entrez gene ID or gene symbol.
+
+Gene DE information named `deinfo` contains the differential expresion p-value and fdr for genes. It can be made using `makegrreadsfrombam` and `getdeinfo` from MeRIP-seq input samples as following:
+```{r}
+ip_bams <- c("treated_ip_rep1.bam"," treated_ip_rep2.bam",    
+             "untreated_ip_rep1.bam ", "untreated_ip_rep2.bam")      
+input_bams <- c("treated_input_rep1.bam","treated_input_rep2.bam",    
+                "untreated_input_rep1.bam", "untreated_input_rep2.bam")    
+sample_condition <- c("treated", "treated", "untreated", "untreated")    
+savepath <- getwd()    
+grlist <- makegrreadsfrombam(IP_bams = ip_bams,    
+                             Input_bams = input_bams,    
+                             condition = sample_condition,    
+                             minimal_alignment_MAPQ = 30,    
+                             txdb = TxDb.Hsapiens.UCSC.hg19.knownGene,    
+                             savepath = savepath)    
+deinfo <- getdeinfo(grlist = grlist,    
+                    txdb = TxDb.Hsapiens.UCSC.hg19.knownGene,    
+                    savepath = savepath)    
+```
+
+The converted `grlist` will be saved to `savepath` named as " bamgrlist.RData ". Users can directly load it to use next time. If you are using other genomes please install the corresponding txdb annotation similar to `TxDb.Hsapiens.UCSC.hg19.knownGene` of the genome and assign it to `txdb`.
+`deinfo` contains the following information:
+```{r}
+head(deinfo)
+##        name         pval         padj
+## 1         1 7.578860e-01 8.990406e-01
+## 2       100 6.958592e-01 8.695820e-01
+## 3      1000 4.155368e-06 6.420489e-05
+## 4     10000 2.043250e-02 9.424864e-02
+## 5 100009676 4.524888e-01 7.148682e-01
+## 6     10001 6.708161e-01 8.566831e-01
+```
+The ‘name’ column can be entrez gene ID or gene symbol.
+
+### 9.3 One step usage of Funm6AViewer
+
+Following is an example to achieve Functional m6A analysis using `funm6aviewer` with previously generated `dminfo`, `deinfo` and `grlist`:
+```{r}
+siggene <- c("CCNT1", "MYC", "BCL2")
+permutime <- 100*length(unique(dminfo$name))
+```
+The `datapath` is the file path where the required PPI data saved and the `enrich_input_directory` is the file path passed to `string_db`, the GO and KEGG function annotation data will be downloaded and saved to this path. All these required data can be downloaded from https://pan.baidu.com/s/1qOGG57OgxmrTwSbbBEeQ2w&shfl=sharepset
+```{r}
+datapath <- "~./Funm6AViewer_data"
+enrich_input_directory <- "~./Funm6AViewer_data"
+savepath <- getwd()
+re <- funm6aviewer(dminfo = dminfo,    
+                   deinfo = deinfo,    
+                   grlist = grlist,    
+                   intrested_gene =  siggene,    
+                   permutime = permutime,    
+                   datapath = datapath,    
+                   enrich_input_directory = enrich_input_directory,    
+                   savepath = savepath)
+```
+The results will be saved to `savepath`. 
