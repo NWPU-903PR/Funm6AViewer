@@ -8,6 +8,7 @@ siggenescoreplot <- function(fdmgene,
                              descore_thr = 0.8) {
 
   if (is.na(savepath)) {savepath <- getwd()}
+  if (!dir.exists(savepath)) {dir.create(savepath, recursive = T)}
 
   msbscore <- fdmgene$MSBscore
   descore <- fdmgene$DEscore
@@ -24,13 +25,20 @@ siggenescoreplot <- function(fdmgene,
   group[ind] <- "FocusedGene"
   shape <- fdmgene$padj <= sigthresh
 
-  dat <- data.frame(Gene = fdmgene$DMgene,
-                    DEScore = as.numeric(descore),
-                    MSBScore = as.numeric(msbscore),
-                    Significant = ind,
+  Gene <- fdmgene$DMgene
+  DEScore <- as.numeric(descore)
+  MSBScore <- as.numeric(msbscore)
+  Significant <- ind
+  GeneType <- factor(group, levels = c("FocusedGene", "RelativeSigGene", "OtherGene"))
+  FDmMGene <- shape
+
+  dat <- data.frame(Gene = Gene,
+                    DEScore = DEScore,
+                    MSBScore = MSBScore,
+                    Significant = Significant,
                     fdind = fdind,
-                    GeneType = factor(group, levels = c("FocusedGene", "RelativeSigGene", "OtherGene")),
-                    FDmMGene = shape)
+                    GeneType = GeneType,
+                    FDmMGene = FDmMGene)
   dat <- rbind(dat[!ind,], dat[ind,])
   dat <- dat[dat$MSBScore!=0,]
 

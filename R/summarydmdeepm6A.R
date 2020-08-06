@@ -21,6 +21,7 @@ summarydmdeepm6A <- function(dmpath,
   dmgr <- rbind(hypergr, hypogr, diffgr)
 
   if (is.na(savepath)) {savepath <- getwd()}
+  if (!dir.exists(savepath)) {dir.create(savepath, recursive = T)}
   write.table(dmgr, file =  paste(savepath, "DMDeepm6AResSummary.xls" , sep = "/"),
               sep = "\t", row.names = FALSE, quote = FALSE)
 

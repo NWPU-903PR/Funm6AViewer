@@ -1,12 +1,17 @@
 
 
-characterdmsites <- function(dmgr,
+characterdmsites <- function(dminfo,
                              txdb = TxDb.Hsapiens.UCSC.hg19.knownGene,
+                             orgsymbol = org.Hs.egSYMBOL,
                              savepath = NA) {
 
   if (is.na(savepath)) {savepath <- getwd()}
+  if (!dir.exists(savepath)) {dir.create(savepath, recursive = T)}
+
+  dmgr <- dminfo
 
   if (ncol(dmgr) < 9) {
+    names(dmgr) <- c("chr", "chromStart", "chromEnd", "name", "score", "strand", "log2fd")
     genesymbol <- .getgenesymbol(orgsymbol, dmgr$name)
     genesymbol <- genesymbol$genesymbol
     dmgr$genesymbol <- genesymbol
@@ -18,18 +23,37 @@ characterdmsites <- function(dmgr,
   gr <-  GRanges(seqnames = dmgr$chr,
                  IRanges(start = (dmgr$chromStart + 1), end = dmgr$chromEnd),
                  strand = dmgr$strand)
+  if (width(gr)[1] == 1) {
+    gr <- resize(gr, width = 51, fix = "center")
+  }
+
   mcols(gr) <- dmgr
 
   ## guitar plot
   gr_hyper <- gr[gr$foldenrich == "hyper"]
   gr_hypo <- gr[gr$foldenrich == "hypo"]
 
-  miscOutFilePrefix <- paste(savepath, "DmMSiteDistribution", sep = "/")
-  grplot <- list(diffpeak = gr, hyper = gr_hyper, hypo = gr_hypo)
-  GuitarPlot(txTxdb = txdb,
-             stGRangeLists = grplot,
-             stGroupName = c("diffsites", "hyper", "hypo"),
-             miscOutFilePrefix = miscOutFilePrefix)
+  if ((length(gr_hypo) >= 10) & (length(gr_hyper) >= 10)) {
+
+    miscOutFilePrefix <- paste(savepath, "DmMSiteDistribution", sep = "/")
+    grplot <- list(diffpeak = gr, hyper = gr_hyper, hypo = gr_hypo)
+    GuitarPlot(txTxdb = txdb,
+               stGRangeLists = grplot,
+               stGroupName = c("diffsites", "hyper", "hypo"),
+               enableCI = FALSE,
+               miscOutFilePrefix = miscOutFilePrefix)
+
+  } else {
+
+    miscOutFilePrefix <- paste(savepath, "DmMSiteDistribution", sep = "/")
+    grplot <- list(diffpeak = gr)
+    GuitarPlot(txTxdb = txdb,
+               stGRangeLists = grplot,
+               stGroupName = c("diffsites"),
+               enableCI = FALSE,
+               miscOutFilePrefix = miscOutFilePrefix)
+
+  }
 
 
   ## pichart plot
@@ -56,17 +80,22 @@ characterdmsites <- function(dmgr,
   dev.off()
 
   ## hyper hypo
-  df <- data.frame(group = factor(rep(c("UTR3", "CDS", "UTR5", "LncRNA"), each = 2),
-                                  levels = c("UTR3", "UTR5", "CDS", "LncRNA")),
-                   value = c(sum(pidat$UTR3 == 1 & pidat$foldenrich == "hyper"),
-                             sum(pidat$UTR3 == 1 & pidat$foldenrich == "hypo"),
-                             sum(pidat$CDS == 1 & pidat$foldenrich == "hyper"),
-                             sum(pidat$CDS == 1 & pidat$foldenrich == "hypo"),
-                             sum(pidat$UTR5 == 1 & pidat$foldenrich == "hyper"),
-                             sum(pidat$UTR5 == 1 & pidat$foldenrich == "hypo"),
-                             sum(pidat$LncRNA == 1 & pidat$foldenrich == "hyper"),
-                             sum(pidat$LncRNA == 1 & pidat$foldenrich == "hypo")),
-                   fd = rep(c("hyper", "hypo"), 4))
+
+  group <- factor(rep(c("UTR3", "CDS", "UTR5", "LncRNA"), each = 2),
+                 levels = c("UTR3", "UTR5", "CDS", "LncRNA"))
+
+  value <- c(sum(pidat$UTR3 == 1 & pidat$foldenrich == "hyper"),
+            sum(pidat$UTR3 == 1 & pidat$foldenrich == "hypo"),
+            sum(pidat$CDS == 1 & pidat$foldenrich == "hyper"),
+            sum(pidat$CDS == 1 & pidat$foldenrich == "hypo"),
+            sum(pidat$UTR5 == 1 & pidat$foldenrich == "hyper"),
+            sum(pidat$UTR5 == 1 & pidat$foldenrich == "hypo"),
+            sum(pidat$LncRNA == 1 & pidat$foldenrich == "hyper"),
+            sum(pidat$LncRNA == 1 & pidat$foldenrich == "hypo"))
+
+  fd <- rep(c("hyper", "hypo"), 4)
+
+  df <- data.frame(group = group, value = value, fd = fd)
 
   bp <- ggplot(df,aes(x=group, y=value, fill=fd)) + geom_bar(stat="identity", width=0.9)
   pie2 <- bp + coord_polar("x", start = 0) + scale_fill_brewer(palette="Dark2", direction = -1) +

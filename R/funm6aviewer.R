@@ -3,8 +3,9 @@ funm6aviewer <- function(dminfo,
                          deinfo,
                          bamgrlist = NA,
                          intrested_gene = NA,
+                         top_alph = 0.8,
                          fungenethr = 0.3,
-                         permutime = 10^4,
+                         permutime = NA,
                          descoretype = "pval",
                          txdb = TxDb.Hsapiens.UCSC.hg19.knownGene,
                          orgdb = org.Hs.eg.db,
@@ -23,10 +24,11 @@ funm6aviewer <- function(dminfo,
 
 
   if (is.na(savepath)) { savepath <- getwd() }
+  if (!dir.exists(savepath)) {dir.create(savepath, recursive = T)}
   if (is.na(datapath)) { datapath <- system.file("extdata", package="Funm6AViewer") }
 
   ## get dm annotation and de score
-
+  names(dminfo) <- c("chr", "chromStart", "chromEnd", "name", "score", "strand", "log2fd")
   genesymbol <- .getgenesymbol(orgsymbol, dminfo$name)
   dminfo$name <- genesymbol$entrezeid
   genesymbol <- genesymbol$genesymbol
@@ -79,10 +81,10 @@ funm6aviewer <- function(dminfo,
   gc()
 
   ## get dmgene
-  gene_utr3 <- unique(dminfo$genesymbol[dminfo$UTR3 != 0])
-  gene_cds <- unique(dminfo$genesymbol[dminfo$CDS != 0])
-  gene_utr5 <- unique(dminfo$genesymbol[dminfo$UTR5 != 0])
-  dmgene <- list(utr3 = gene_utr3, utr5 = gene_utr5, cds = gene_cds)
+  gene_utr3 <- dminfo$UTR3 != 0
+  gene_cds <- dminfo$CDS != 0
+  gene_utr5 <- dminfo$UTR5 != 0
+  dmgene <- list(utr3 = dminfo[gene_utr3,], utr5 = dminfo[gene_utr5,], cds = dminfo[gene_cds,])
 
   savepath2 <- paste(savepath, "FunDMDeepm6ARe", sep = "/")
   dir.create(savepath2)
@@ -90,23 +92,23 @@ funm6aviewer <- function(dminfo,
   print("Running FunDMDeepm6A for genes with UTR3 DmM sites...")
   ## utr3
   DMgene <- dmgene$utr3
-  fdm_utr3 <- fdmdeepm6A(DMgene, descore, datapath = datapath, savepath = savepath2,
+  fdm_utr3 <- fdmdeepm6A(DMgene, descore, top_alph = top_alph, fungenethr = fungenethr, datapath = datapath, savepath = savepath2,
                          orgsymbol = orgsymbol, permutime = permutime,
-                         savename = "Funm6AGene_utr3.xls", no_cores = no_cores)
+                         savename = "Funm6AGene_utr3", no_cores = no_cores)
 
   print("Running FunDMDeepm6A for genes with CDS DmM sites...")
   ## cds
   DMgene <- dmgene$cds
-  fdm_cds <- fdmdeepm6A(DMgene, descore, datapath = datapath, savepath = savepath2,
+  fdm_cds <- fdmdeepm6A(DMgene, descore, top_alph = top_alph, fungenethr = fungenethr, datapath = datapath, savepath = savepath2,
                         orgsymbol = orgsymbol, permutime = permutime,
-                        savename = "Funm6AGene_cds.xls", no_cores = no_cores)
+                        savename = "Funm6AGene_cds", no_cores = no_cores)
 
   print("Running FunDMDeepm6A for genes with UTR5 DmM sites...")
   ## utr5
   DMgene <- dmgene$utr5
-  fdm_utr5 <- fdmdeepm6A(DMgene, descore, datapath = datapath, savepath = savepath2,
+  fdm_utr5 <- fdmdeepm6A(DMgene, descore, top_alph = top_alph, fungenethr = fungenethr, datapath = datapath, savepath = savepath2,
                          orgsymbol = orgsymbol, permutime = permutime,
-                         savename = "Funm6AGene_utr5.xls", UTR5only = TRUE, no_cores = no_cores)
+                         savename = "Funm6AGene_utr5", UTR5only = TRUE, no_cores = no_cores)
 
   ## combine result
   fdm_utr3$UTR5only <- "UTR3"
@@ -114,9 +116,12 @@ funm6aviewer <- function(dminfo,
   fdm_cds$UTR5only <- "CDS"
 
   fdmgene <- rbind(fdm_utr5, fdm_cds, fdm_utr3)
-  names(fdmgene)[7] <- "SitePosition"
+  names(fdmgene)[names(fdmgene) == "UTR5only"] <- "SitePosition"
 
-  write.table(fdmgene, file =  paste(savepath2, "Funm6AGene.xls", sep = "/"), sep = "\t", row.names = FALSE, quote = FALSE)
+  write.table(fdmgene, file =  paste(savepath2, "Candidate_Funm6AGene.xls", sep = "/"),
+              sep = "\t", row.names = FALSE, quote = FALSE)
+  write.table(fdmgene[fdmgene$padj <= fungenethr,], file =  paste(savepath2, "Sig_Funm6AGene.xls", sep = "/"),
+              sep = "\t", row.names = FALSE, quote = FALSE)
 
   print("Visualizing functional DmM genes...")
 

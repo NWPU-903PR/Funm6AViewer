@@ -10,6 +10,8 @@ msbnetplot <- function(genesymbol,
                        plotsize = NA,
                        labeloff = FALSE) {
 
+  descore <- abs(descore)
+
   genesymbol <- .getgenesymbol(orgsymbol, genesymbol)
   genesymbol <- genesymbol$genesymbol
 
@@ -22,7 +24,11 @@ msbnetplot <- function(genesymbol,
 
   if (is.na(datapath)) { datapath <- system.file("extdata", package="Funm6AViewer") }
   if (is.na(savepath)) {savepath <- getwd()}
+  if (!dir.exists(savepath)) {dir.create(savepath, recursive = T)}
   if (is.na(savename)) {savename <- genesymbol[1]}
+
+  net <- NULL
+  sigmotif <- NULL
 
   load(paste(datapath, "net.RData", sep = "/"))
   load(paste(datapath, "netmotif.RData", sep = "/"))

@@ -1,27 +1,50 @@
 
 ## fdmdeepm6A
 
-fdmdeepm6A <- function(DMgene,
+fdmdeepm6A <- function(dminfo,
                        descore,
+                       top_alph = 0.8,
+                       fungenethr = 0.3,
                        datapath = NA,
                        UTR5only = FALSE,
                        orgsymbol = org.Hs.egSYMBOL,
                        savepath = NA,
-                       savename = "Funm6AGene.xls",
-                       permutime = 100*length(DMgene),
+                       savename = "Funm6AGene",
+                       permutime = NA,
                        no_cores = NA) {
 
   if (is.na(datapath)) { datapath <- system.file("extdata", package="Funm6AViewer") }
+  descore <- abs(descore)
+  alph <- quantile(descore, top_alph)
 
+  names(dminfo)[1:7] <- c("chr", "chromStart", "chromEnd", "name", "score", "strand", "log2fd")
+  dminfo <- dminfo[!is.na(dminfo$name),]
+  if (is.na(permutime)) { permutime <- 100*length(unique(dminfo$name)) }
+
+  ind <- tapply(dminfo$log2fd, dminfo$name, function(x){max(abs(x))})
+  ind <- is.element(paste(dminfo$name, abs(dminfo$log2fd)), paste(names(ind), ind))
+  dminfo <- dminfo[ind,]
+
+  ind <- !duplicated(dminfo$name)
+  dminfo <- dminfo[ind,]
+
+  DMgene <- dminfo$name
   DMgene <- .getgenesymbol(orgsymbol, DMgene)
   DMgene <- DMgene$genesymbol
-  DMgene <- DMgene[!is.na(DMgene)]
+
+  ind <- !is.na(DMgene)
+  dminfo <- dminfo[ind,]
+  DMgene <- DMgene[ind]
+  dminfo$name <- DMgene
 
   if (sum(UTR5only) == 0) {UTR5only <- rep(0, length(DMgene))}
   if (sum(UTR5only) == 1) {UTR5only <- rep(1, length(DMgene))}
 
   degenes <- .getgenesymbol(orgsymbol, names(descore))
   names(descore) <- degenes$genesymbol
+
+  net <- NULL
+  sigmotif <- NULL
 
   load(paste(datapath, "net.RData", sep = "/"))
   load(paste(datapath, "netmotif.RData", sep = "/"))
@@ -48,6 +71,9 @@ fdmdeepm6A <- function(DMgene,
     # print(ggplot(dat,aes(x=x, fill=group, color = group)) + geom_density(alpha=0.25))
   }
 
+  rm(rank)
+  gc()
+
   names(dmdescore) <- names(net)
 
   ## get all dmde score
@@ -65,10 +91,10 @@ fdmdeepm6A <- function(DMgene,
   print(paste(permutime, "times random test for ranks, this may take a few hours..."))
   if (!is.na(no_cores)) {print(paste(no_cores, "cores are used."))}
 
-  rankscore <- .getrankscore(msbscore)
+  rankscore <- .getrankscore(msbscore, alph)
 
-  alphapath <- system.file("extdata", "alphascore.R", package="Funm6AViewer")
-  rankpval <- .rankrandomtest(msbscore, permutime, no_cores, alphapath)
+  # alphapath <- system.file("extdata", "alphascore.R", package="Funm6AViewer")
+  rankpval <- .rankrandomtest(msbscore, permutime, no_cores, alph)
 
   rankfdr <- p.adjust(rankpval, method = "BH")
 
@@ -91,11 +117,24 @@ fdmdeepm6A <- function(DMgene,
                     pval = rankpval,
                     padj = rankfdr)
 
+  ind <- match(DMgene, dminfo$name)
+  dminfo <- dminfo[ind,]
+
+  names(dminfo)[1:7] <- c("DMSite.chr", "DMSite.chromStart", "DMSite.chromEnd", "Gene.name",
+                          "DMSite.score", "DMSite.strand", "DM.log2.foldchange")
   colnames(msbscore) <- paste(names(net), "Score", sep = ".")
-  xls <- cbind(xls, UTR5only, msbscore)
+
+  xls <- cbind(xls, msbscore, dminfo[,1:7], UTR5only)
 
   if (is.na(savepath)) {savepath <- getwd()}
-  write.table(xls, file =  paste(savepath, savename, sep = "/"),
+  if (!dir.exists(savepath)) {dir.create(savepath, recursive = T)}
+
+  save1 <- paste("Candidate_", savename, ".xls", sep = "")
+  save2 <- paste("Sig_", savename, ".xls", sep = "")
+
+  write.table(xls, file =  paste(savepath, save1, sep = "/"),
+              sep = "\t", row.names = FALSE, quote = FALSE)
+  write.table(xls[xls$padj <= fungenethr,], file =  paste(savepath, save2, sep = "/"),
               sep = "\t", row.names = FALSE, quote = FALSE)
 
   return(xls)
@@ -113,7 +152,9 @@ fdmdeepm6A <- function(DMgene,
 
   id <- match(toupper(netid$gene_name), toupper(names(descore)))
   genedescore <- descore[id]
-  genedescore[is.na(genedescore)] <- 0
+  genedescore[is.na(genedescore)] <- -log10(0.9999)
+  genedescore[genedescore < -log10(0.9999)] <- -log10(0.9999)
+  # # genedescore[genedescore <= -log10(0.1)] <- -log10(0.99)
 
   id <- match(toupper(netid$gene_name)[DMind], toupper(DMgene))
   UTR5only <- UTR5only[id]
@@ -128,7 +169,7 @@ fdmdeepm6A <- function(DMgene,
   motifid <- motifid[unlist(motifind) != 0]
 
   len <- unlist(lapply(motifid, length))
-  motifind <- lapply(motifid, function(x, y, z){sum(is.element(x,y) & is.element(x,z))}, DMind, Funind)
+  motifind <- lapply(motifid, function(x, y, z){sum(is.element(x,y) | is.element(x,z))}, DMind, Funind)
   motifind <- unlist(motifind) != len
   motifid <- motifid[motifind]
 
@@ -166,7 +207,7 @@ fdmdeepm6A <- function(DMgene,
     ind <- match(toupper(row.names(msbscore0)), toupper(names(msbscore)))
     rankm0 <- msbscorem[,i]
     rankm0[ind] <- msbscore0$DEScore
-    rankm0[is.na(rankm0)] <- 0
+    rankm0[is.na(rankm0)] <- -log10(0.9999)
     msbscorem[,i] <- rankm0
   }
 
@@ -192,7 +233,7 @@ fdmdeepm6A <- function(DMgene,
   return(bscore)
 }
 
-.getrankscore <- function(msbscore) {
+.getrankscore <- function(msbscore, alph) {
 
   len <- nrow(msbscore)
   rankm <- msbscore
@@ -204,7 +245,7 @@ fdmdeepm6A <- function(DMgene,
   }
 
   rankm <- cbind(rankm, msbscore)
-  bscore <- apply(rankm, 1, .alphascore, -log10(0.05))
+  bscore <- apply(rankm, 1, .alphascore, alph)
   names(bscore) <- row.names(msbscore)
 
   return(bscore)
@@ -213,35 +254,40 @@ fdmdeepm6A <- function(DMgene,
 
 ## random test for rank
 
-.rankrandomtest <- function(msbscore, m, no_cores, alphapath) {
+.rankrandomtest <- function(msbscore, m, no_cores, alph) {
 
-  rankscore0 <- .getrankscore(msbscore)
+  rankscore0 <- .getrankscore(msbscore, alph)
   len <- length(rankscore0)
 
   if (!is.na(no_cores)) {
     cl <- makeCluster(no_cores)
-    rmscore <- parLapply(cl, 1:m, .getrandomscore, msbscore, alphapath)
+    rmscore <- parLapply(cl, 1:m, .getrandomscore, msbscore, alph)
     stopCluster(cl)
   } else {
-    rmscore <- lapply(1:m, .getrandomscore, msbscore, alphapath)
+    rmscore <- lapply(1:m, .getrandomscore, msbscore, alph)
   }
 
-  rmscorex <- matrix(unlist(rmscore), nrow = len)
-  rankscore <- cbind(rankscore0, rmscorex)
+  pval <- rep(0, length(rankscore0))
+  for (i in 1:length(rmscore)) {
+    pval <- pval + (rmscore[[i]] <= rankscore0)
+  }
+  pval <- pval/m
 
-  pval <- apply(rankscore, 1, function(x, m){sum(x[2:(m-1)] <= x[1])/m}, m)
+  rm(rmscore)
+  gc()
 
   return(pval)
 }
 
-.getrandomscore <- function(x, msbscore, alphapath) {
+.getrandomscore <- function(x, msbscore, alph) {
 
-  source(alphapath)
   len <- nrow(msbscore)
 
-  randomscorem <- as.vector(msbscore)
-  randomscorem <- sample(randomscorem, length(randomscorem))
-  randomscorem <- matrix(randomscorem, nrow = len, ncol = 4)
+  randomscorem <- msbscore
+  len <- nrow(randomscorem)
+  for (i in 1:4) {
+    randomscorem[,i] <- sample(randomscorem[,i], len)
+  }
 
   rankm <- randomscorem
   for (i in 1:4) {
@@ -252,15 +298,26 @@ fdmdeepm6A <- function(DMgene,
   }
 
   rankm <- cbind(rankm, randomscorem)
-  bscore <- apply(rankm, 1, .alphascorex, -log10(0.05))
+  bscore <- apply(rankm, 1, function(x, alph) {
+
+    r <- x[1:4]
+    s <- x[5:8]
+    sor <- sort(r, index.return = TRUE)
+    r <- r[sor$ix]
+    s <- s[sor$ix]
+
+    bscore <- RobustRankAggreg::betaScores(r)
+    if (sum(s >= alph) == 0) {
+      bscore <- 1
+    } else {
+      bscore <- min(bscore[s >= alph])
+    }
+
+    return(bscore)
+
+  }, alph)
   names(bscore) <- row.names(msbscore)
 
   return(bscore)
 }
-
-
-
-
-
-
 

@@ -16,6 +16,7 @@ siggenepathplot <- function(fdmgene,
   siggene <- siggene$genesymbol
 
   if(is.na(savepath)) {savepath <- getwd()}
+  if (!dir.exists(savepath)) {dir.create(savepath, recursive = T)}
 
   string_db <- STRINGdb$new( version = version, species = species,
                              score_threshold=0, input_directory = input_directory)
@@ -25,10 +26,10 @@ siggenepathplot <- function(fdmgene,
   hits <- unique(hits_fg$STRING_id)
 
   ## enrichment
-  enrichmentGO <- string_db$get_enrichment(hits, category = "Process", methodMT = "fdr", iea = TRUE)
+  enrichmentGO <- string_db$get_enrichment(hits, category = "Process", methodMT = "fdr", iea = FALSE)
   enrichmentGO <- enrichmentGO[enrichmentGO$pvalue_fdr <= bp_fdr_thr,]
 
-  enrichmentKEGG <- string_db$get_enrichment(hits, category = "KEGG", methodMT = "fdr", iea = TRUE)
+  enrichmentKEGG <- string_db$get_enrichment(hits, category = "KEGG", methodMT = "fdr", iea = FALSE)
   enrichmentKEGG <- enrichmentKEGG[enrichmentKEGG$pvalue_fdr <= kegg_fdr_thr,]
 
   sighits <- hits_fg[is.element(hits_fg$fdmgene, siggene),]
@@ -37,7 +38,7 @@ siggenepathplot <- function(fdmgene,
   for (i in 1:length(siggene)) {
     genename <- sighits$fdmgene[i]
 
-    enrichmentGO_sig <- string_db$get_enrichment(sighits$STRING_id[i], category = "Process", methodMT = "fdr", iea = TRUE)
+    enrichmentGO_sig <- string_db$get_enrichment(sighits$STRING_id[i], category = "Process", methodMT = "fdr", iea = FALSE)
     enrichmentGO_sig <- enrichmentGO[is.element(enrichmentGO$term_id, enrichmentGO_sig$term_id),]
     n <- nrow(enrichmentGO_sig)
     n <- min(n, 30)
@@ -49,7 +50,7 @@ siggenepathplot <- function(fdmgene,
     }
 
 
-    enrichmentKEGG_sig <- string_db$get_enrichment(sighits$STRING_id[i], category = "KEGG", methodMT = "fdr", iea = TRUE)
+    enrichmentKEGG_sig <- string_db$get_enrichment(sighits$STRING_id[i], category = "KEGG", methodMT = "fdr", iea = FALSE)
     enrichmentKEGG_sig <- enrichmentKEGG[is.element(enrichmentKEGG$term_id, enrichmentKEGG_sig$term_id),]
     n <- nrow(enrichmentKEGG_sig)
     n <- min(n, 30)
@@ -61,11 +62,11 @@ siggenepathplot <- function(fdmgene,
     }
   }
 
-  write.table(enrichmentGO, file =  paste(savepath, "BP_enrichment.xls", sep = "/"),
-              sep = "\t", row.names = FALSE, quote = FALSE)
-
-  write.table(enrichmentKEGG, file =  paste(savepath, "KEGG_enrichment.xls", sep = "/"),
-              sep = "\t", row.names = FALSE, quote = FALSE)
+  .writeenrichment(hits, string_db,
+                   bp_fdr_thr = bp_fdr_thr,
+                   kegg_fdr_thr = kegg_fdr_thr,
+                   BPsavename = paste(savepath, "BP_enrichment_Allfdmgenes.xls", sep = "/"),
+                   KEGGsavename = paste(savepath, "KEGG_enrichment_Allfdmgenes.xls", sep = "/"))
 
 }
 
