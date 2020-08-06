@@ -120,7 +120,7 @@ funm6aviewer <- function(dminfo,
 
   write.table(fdmgene, file =  paste(savepath2, "Candidate_Funm6AGene.xls", sep = "/"),
               sep = "\t", row.names = FALSE, quote = FALSE)
-  write.table(fdmgene[fdmgene$padj <= fungenethr,], file =  paste(savepath2, "Sig_Funm6AGene.xls", sep = "/"),
+  write.table(fdmgene[fdmgene$padj <= fungenethr,], file =  paste(savepath2, "Funm6AGene.xls", sep = "/"),
               sep = "\t", row.names = FALSE, quote = FALSE)
 
   print("Visualizing functional DmM genes...")

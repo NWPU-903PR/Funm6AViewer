@@ -65,8 +65,8 @@ siggenepathplot <- function(fdmgene,
   .writeenrichment(hits, string_db,
                    bp_fdr_thr = bp_fdr_thr,
                    kegg_fdr_thr = kegg_fdr_thr,
-                   BPsavename = paste(savepath, "BP_enrichment_Allfdmgenes.xls", sep = "/"),
-                   KEGGsavename = paste(savepath, "KEGG_enrichment_Allfdmgenes.xls", sep = "/"))
+                   BPsavename = paste(savepath, "BP_enrichment.xls", sep = "/"),
+                   KEGGsavename = paste(savepath, "KEGG_enrichment.xls", sep = "/"))
 
 }
 

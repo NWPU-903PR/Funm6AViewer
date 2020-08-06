@@ -130,7 +130,7 @@ fdmdeepm6A <- function(dminfo,
   if (!dir.exists(savepath)) {dir.create(savepath, recursive = T)}
 
   save1 <- paste("Candidate_", savename, ".xls", sep = "")
-  save2 <- paste("Sig_", savename, ".xls", sep = "")
+  save2 <- paste(savename, ".xls", sep = "")
 
   write.table(xls, file =  paste(savepath, save1, sep = "/"),
               sep = "\t", row.names = FALSE, quote = FALSE)
