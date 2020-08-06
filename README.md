@@ -1,5 +1,5 @@
 # Funm6AViewer
-Identification and visualization of  functional differential m6A methylation genes (FDmMGenes) and single base DmM sites.
+Identification and visualization of  functional differential m6A methylation genes (FDmMGenes) and single base DmM sites. We also developed the Funm6AViewer webserver which is freely available from http://funm6aviewer.rnamd.com/ .
 
 ## 1. Installation
 
