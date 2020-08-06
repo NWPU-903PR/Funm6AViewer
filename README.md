@@ -77,13 +77,13 @@ The 'name' column can be entrez gene ID or gene symbol.
 `deinfo` contains the differential expresion p-value and fdr for genes. It can be made using `makegrreadsfrombam` and `getdeinfo` (see [9.2](https://github.com/NWPU-903PR/Funm6AViewer#92-making-input-for-funm6aviewer) for more details), or users can use any other method to make it as the following formate:
 ```{r}
 head(deinfo)
-##        name         pval         padj
-## 1         1 7.578860e-01 8.990406e-01
-## 2       100 6.958592e-01 8.695820e-01
-## 3      1000 4.155368e-06 6.420489e-05
-## 4     10000 2.043250e-02 9.424864e-02
-## 5 100009676 4.524888e-01 7.148682e-01
-## 6     10001 6.708161e-01 8.566831e-01
+##        name         pval         padj log2FoldChange
+## 1         1 7.578860e-01 8.990406e-01    -0.07382034
+## 2       100 6.958592e-01 8.695820e-01     0.07649361
+## 3      1000 4.155368e-06 6.420489e-05    -0.73757946
+## 4     10000 2.043250e-02 9.424864e-02     0.40075777
+## 5 100009676 4.524888e-01 7.148682e-01    -0.16186352
+## 6     10001 6.708161e-01 8.566831e-01     0.08459812
 ```
 The 'name' column can be entrez gene ID or gene symbol.
 
@@ -332,13 +332,13 @@ The converted `grlist` will be saved to `savepath` named as " bamgrlist.RData ".
 `deinfo` contains the following information:
 ```{r}
 head(deinfo)
-##        name         pval         padj
-## 1         1 7.578860e-01 8.990406e-01
-## 2       100 6.958592e-01 8.695820e-01
-## 3      1000 4.155368e-06 6.420489e-05
-## 4     10000 2.043250e-02 9.424864e-02
-## 5 100009676 4.524888e-01 7.148682e-01
-## 6     10001 6.708161e-01 8.566831e-01
+##        name         pval         padj log2FoldChange
+## 1         1 7.578860e-01 8.990406e-01    -0.07382034
+## 2       100 6.958592e-01 8.695820e-01     0.07649361
+## 3      1000 4.155368e-06 6.420489e-05    -0.73757946
+## 4     10000 2.043250e-02 9.424864e-02     0.40075777
+## 5 100009676 4.524888e-01 7.148682e-01    -0.16186352
+## 6     10001 6.708161e-01 8.566831e-01     0.08459812
 ```
 The ‘name’ column can be entrez gene ID or gene symbol.
 
