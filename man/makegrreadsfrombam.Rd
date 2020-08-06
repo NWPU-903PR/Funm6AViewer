@@ -12,6 +12,7 @@ makegrreadsfrombam(IP_bams,
                    Input_bams,
                    condition,
                    minimal_alignment_MAPQ = 30,
+                   fragment_length = 100,
                    txdb = TxDb.Hsapiens.UCSC.hg19.knownGene,
                    savepath = NA)
 }
@@ -28,6 +29,9 @@ A vector of characters denote the condition of IP and Input samples. Should be t
 }
   \item{minimal_alignment_MAPQ}{
 parameter passed to GenomicAlignments to contol the reads quality.
+}
+  \item{fragment_length}{
+an integer, which specifies the fragment length in the library preparation, default: 100
 }
   \item{txdb}{
 The txdb famate genome annotation. You need to input it similar to "TxDb.Hsapiens.UCSC.hg19.knownGene" if use other genomes instead of hg19.
@@ -47,9 +51,6 @@ Funm6AViewer: Visualization of single base differential m6A methylation sites an
 }
 \author{
 Songyao Zhang
-}
-\examples{
-
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

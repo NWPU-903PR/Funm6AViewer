@@ -8,23 +8,31 @@ Functional DmM gene identification.
 This function is used to identify functional DmM genes from a list of DmM genes using FunDMDeepm6A approach.
 }
 \usage{
-fdmdeepm6A(DMgene,
+fdmdeepm6A(dminfo,
            descore,
+           top_alph = 0.8,
+           fungenethr = 0.3,
            datapath = NA,
            UTR5only = FALSE,
            orgsymbol = org.Hs.egSYMBOL,
            savepath = NA,
-           savename = "Funm6AGene.xls",
-           permutime = 100*length(DMgene),
+           savename = "Funm6AGene",
+           permutime = NA,
            no_cores = NA)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{DMgene}{
-A vector of characters denote the gene symbol of DmM genes used to do the analysis
+  \item{dminfo}{
+A dataframe of DmM sites information. It can be generated using summarydmdeepm6A from DMDeepm6A package result.
 }
   \item{descore}{
 A vector of named numbers denote the differntial expression score of all genes, it can be genarated using getdescore function
+}
+  \item{top_alph}{
+The top percentage threshold used to aggregate the ranks from each PPI network. In defalt, the threshold is set as 0.8 which means only MSB scores larger than 80 pencentage of DE scores will contribute to the functional rank. A larger top_alph (must no more than 1) makes the functional ranks aggregation test more rigorous.
+}
+  \item{fungenethr}{
+The threshold of the FDR used to determine whether a DmMGene is a FDmMGene
 }
   \item{datapath}{
 The file path where the network information required of FunDMDeepm6A, usually do not need to input, only if you prefer to use your own PPI networks
@@ -69,16 +77,14 @@ deinfo <- system.file("extdata", "DEinfo_toy.xls", package="Funm6AViewer")
 
 dminfo <- read.table(dminfo, header = TRUE, stringsAsFactors = FALSE)
 deinfo <- read.delim(deinfo, header = TRUE, stringsAsFactors = FALSE)
-
-DMgene <- unique(dminfo$name)
 descore <- getdescore(deinfo)
 
 # The datapath is the filepath where the required PPI data saved, they can be downloaded
 # from https://pan.baidu.com/s/1qOGG57OgxmrTwSbbBEeQ2w&shfl=sharepset
-datapath <- "F:/Funm6A_package/data"
+datapath <- "E:/Funm6A_package/data"
 permutime <- 1000
 
-re <- fdmdeepm6A(DMgene = DMgene, descore = descore, datapath = datapath, permutime = permutime)
+re <- fdmdeepm6A(dminfo = dminfo, descore = descore, datapath = datapath, permutime = permutime)
 
 # plot interested gene MSB score
 siggene <- c("CCNT1", "MYC", "BCL2")

@@ -11,6 +11,7 @@ Visualization of reads coverage on interested gene.
 coverageplot(dminfo,
              grlist,
              intrested_gene,
+             track_height = NA,
              savepath = NA,
              txdb = TxDb.Hsapiens.UCSC.hg19.knownGene,
              orgsymbol = org.Hs.egSYMBOL,
@@ -26,6 +27,9 @@ A list containing the reads count of IP/Input bam files under different conditio
 }
   \item{intrested_gene}{
 A vector of interested gene to visualize, can be entrez gene id or gene symbol
+}
+  \item{track_height}{
+A numeric number to set the max ylim of tracks showing reads count coverage on gene
 }
   \item{savepath}{
 The file path where to save the result

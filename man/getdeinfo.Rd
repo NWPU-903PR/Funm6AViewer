@@ -36,9 +36,6 @@ Funm6AViewer: Visualization of single base differential m6A methylation sites an
 \author{
 Songyao Zhang
 }
-\examples{
-
-}
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 \keyword{ Statistical Inference }

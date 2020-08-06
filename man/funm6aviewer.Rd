@@ -12,8 +12,9 @@ funm6aviewer(dminfo,
              deinfo,
              bamgrlist = NA,
              intrested_gene = NA,
+             top_alph = 0.8,
              fungenethr = 0.3,
-             permutime = 10^4,
+             permutime = NA,
              descoretype = "pval",
              txdb = TxDb.Hsapiens.UCSC.hg19.knownGene,
              orgdb = org.Hs.eg.db,
@@ -43,6 +44,9 @@ A list containing the reads count of IP/Input bam files under different conditio
   \item{intrested_gene}{
 A vector of interested genes to visualize, can be gene entrez id or gene symbol
 }
+  \item{top_alph}{
+The top percentage threshold used to aggregate the ranks from each PPI network. In defalt, the threshold is set as 0.8 which means only MSB scores larger than 80 pencentage of DE scores will contribute to the functional rank. A larger top_alph (must no more than 1) makes the functional ranks aggregation test more rigorous.
+}
   \item{fungenethr}{
 The threshold of the FDR used to determine whether a DmMGene is a FDmMGene
 }
@@ -50,7 +54,7 @@ The threshold of the FDR used to determine whether a DmMGene is a FDmMGene
 The permutation times to calculate an empirical p-value for DmMGenes to be FDmMGenes
 }
   \item{descoretype}{
-The value used to calculate the DE score. It can be "pval" or "padj" denotes use the p-value or FDR of genes to calculate the DE score.
+The value used to calculate the DE score. It can be "pval", "padj", or "log2FoldChange" denotes use the p-value, FDR or log2FoldChange of genes to calculate the DE score.
 }
   \item{txdb}{
 The txdb famate genome annotation. You need to input it similar to "TxDb.Hsapiens.UCSC.hg19.knownGene" if use other genomes instead of hg19.
@@ -140,8 +144,8 @@ permutime <- 1000
 ## the datapath and enrich_input_directory are the filepaths where the required
 ## PPI and function annotation data saved they can be downloaded
 ## from https://pan.baidu.com/s/1qOGG57OgxmrTwSbbBEeQ2w&shfl=sharepset
-datapath <- "F:/Funm6A_package/data"
-enrich_input_directory <- "F:/Funm6A_package/data"
+datapath <- "E:/Funm6A_package/data"
+enrich_input_directory <- "E:/Funm6A_package/data"
 
 re <- funm6aviewer(dminfo, deinfo, grlist, intrested_gene =  siggene, permutime = permutime,
                    datapath = datapath, enrich_input_directory = enrich_input_directory)

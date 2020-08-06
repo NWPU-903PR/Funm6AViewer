@@ -17,7 +17,7 @@ getdescore(deseqre,
 A dataframe of DE information. It can be generated using getdeinfo from input bam files.
 }
   \item{scoretype}{
-The value used to calculate the DE score. It can be "pval" or "padj" denotes use the p-value or FDR of genes to calculate the DE score.
+The value used to calculate the DE score. It can be "pval", "padj", or "log2FoldChange" denotes use the p-value, FDR or log2FoldChange of genes to calculate the DE score.
 }
 }
 \details{

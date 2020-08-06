@@ -79,7 +79,7 @@ siggene <- c("CCNT1", "MYC", "BCL2")
 # You can also donwloaded the annotation data previously
 # from https://pan.baidu.com/s/1qOGG57OgxmrTwSbbBEeQ2w&shfl=sharepset
 # and set the input_directory as where you save the data.
-input_directory <- "F:/Funm6A_package/data"
+input_directory <- "E:/Funm6A_package/data"
 
 re <- siggenepathplot(fdmgene = fdmgene, intrested_gene = siggene,
                       input_directory = input_directory)

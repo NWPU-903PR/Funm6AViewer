@@ -76,7 +76,7 @@ siggene <- c("CCNT1", "MYC", "BCL2")
 
 # The datapath is the filepath where the required PPI data saved, they can be downloaded
 # from https://pan.baidu.com/s/1qOGG57OgxmrTwSbbBEeQ2w&shfl=sharepset
-datapath <- "F:/Funm6A_package/data"
+datapath <- "E:/Funm6A_package/data"
 
 # plot for one gene
 re <- msbnetplot(genesymbol = siggene[1], dmgene = dmgene, descore = descore, datapath = datapath)
