@@ -12,6 +12,7 @@ enrichmentplot(fdmgene,
                sigthr = 0.3,
                bp_fdr_thr = 0.05,
                kegg_fdr_thr = 0.05,
+               top_terms = 20,
                input_directory = "",
                version = "10",
                species = 9606,
@@ -30,6 +31,9 @@ The parameter passed to STRINGdb to determine the threshold of fdr to determine 
 }
   \item{kegg_fdr_thr}{
 The parameter passed to STRINGdb to determine the threshold of fdr to determine significant enriched KEGG pathways
+}
+  \item{top_terms}{
+The parameter determines the number of top enriched pathways to show
 }
   \item{input_directory}{
 The parameter passed to STRINGdb to determine whether all the database files will be downloaded into this directory and the package can then be used off-line
