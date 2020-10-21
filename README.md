@@ -24,7 +24,7 @@ devtools::install_github("NWPU-903PR/Funm6AViewer")
 
 ## 2. Data required
 
-Funm6AViewer adopted FunDMDeep-m6A to idenify functional DmM genes which required 4 PPI networks. Then to run Funm6AViewer, users need to firstly download this data from https://pan.baidu.com/s/1qOGG57OgxmrTwSbbBEeQ2w&shfl=sharepset
+Funm6AViewer adopted FunDMDeep-m6A to idenify functional DmM genes which required 4 PPI networks. Then to run Funm6AViewer, users need to firstly download this data from http://180.208.58.66/Funm6AViewer/Download/Funm6AViewer_data.zip
 
 ## 3. One step usage of Funm6AViewer
 
@@ -96,7 +96,7 @@ siggene <- c("CCNT1", "MYC", "BCL2")
 permutime <- 1000
 ```
 
-The `datapath` is the filepath where the required PPI data saved and the `enrich_input_directory` is the filepath passed to string_db, the GO and KEGG function annotation data will be downloaded to this path. All these required data can be downloaded from https://pan.baidu.com/s/1qOGG57OgxmrTwSbbBEeQ2w&shfl=sharepset
+The `datapath` is the filepath where the required PPI data saved and the `enrich_input_directory` is the filepath passed to string_db, the GO and KEGG function annotation data will be downloaded to this path. All these required data can be downloaded from http://180.208.58.66/Funm6AViewer/Download/Funm6AViewer_data.zip
 ```{r, eval=FALSE}
 datapath <- "F:/Funm6A_package/data"
 enrich_input_directory <- "F:/Funm6A_package/data"
@@ -185,7 +185,7 @@ DMgene <- unique(dminfo$name)
 descore <- getdescore(deinfo)
 ```
 
-The `datapath` is the filepath where the required PPI data saved and it can be downloaded from https://pan.baidu.com/s/1qOGG57OgxmrTwSbbBEeQ2w&shfl=sharepset
+The `datapath` is the filepath where the required PPI data saved and it can be downloaded from http://180.208.58.66/Funm6AViewer/Download/Funm6AViewer_data.zip
 ```{r}
 datapath <- "F:/Funm6A_package/data"
 permutime <- 1000
@@ -215,7 +215,7 @@ fdmgene <- unique(dminfo$name)
 siggene <- c("MYC")
 ```
 
-The `input_directory` is the filepath passed to string_db, the GO and KEGG function annotation data will be downloaded to this path. Users can also donwloaded the annotation data previously from https://pan.baidu.com/s/1qOGG57OgxmrTwSbbBEeQ2w&shfl=sharepset and set the `input_directory` as where you save the data.
+The `input_directory` is the filepath passed to string_db, the GO and KEGG function annotation data will be downloaded to this path. Users can also donwloaded the annotation data previously from http://180.208.58.66/Funm6AViewer/Download/Funm6AViewer_data.zip and set the `input_directory` as where you save the data.
 ```{r}
 input_directory <- "F:/Funm6A_package/data"
 
@@ -241,7 +241,7 @@ descore <- getdescore(deinfo)
 siggene <- c("CCNT1", "MYC", "BCL2")
 ```
 
-The `datapath` is the filepath where the required PPI data saved and it can be downloaded from https://pan.baidu.com/s/1qOGG57OgxmrTwSbbBEeQ2w&shfl=sharepset
+The `datapath` is the filepath where the required PPI data saved and it can be downloaded from http://180.208.58.66/Funm6AViewer/Download/Funm6AViewer_data.zip
 ```{r}
 datapath <- "F:/Funm6A_package/data"
 ```
@@ -349,7 +349,7 @@ Following is an example to achieve Functional m6A analysis using `funm6aviewer` 
 siggene <- c("CCNT1", "MYC", "BCL2")
 permutime <- 100*length(unique(dminfo$name))
 ```
-The `datapath` is the file path where the required PPI data saved and the `enrich_input_directory` is the file path passed to `string_db`, the GO and KEGG function annotation data will be downloaded and saved to this path. All these required data can be downloaded from https://pan.baidu.com/s/1qOGG57OgxmrTwSbbBEeQ2w&shfl=sharepset
+The `datapath` is the file path where the required PPI data saved and the `enrich_input_directory` is the file path passed to `string_db`, the GO and KEGG function annotation data will be downloaded and saved to this path. All these required data can be downloaded from http://180.208.58.66/Funm6AViewer/Download/Funm6AViewer_data.zip
 ```{r}
 datapath <- "~./Funm6AViewer_data"
 enrich_input_directory <- "~./Funm6AViewer_data"
