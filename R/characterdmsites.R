@@ -41,6 +41,7 @@ characterdmsites <- function(dminfo,
                stGRangeLists = grplot,
                stGroupName = c("diffsites", "hyper", "hypo"),
                enableCI = FALSE,
+               pltTxType =  "mrna",
                miscOutFilePrefix = miscOutFilePrefix)
 
   } else {
@@ -51,6 +52,7 @@ characterdmsites <- function(dminfo,
                stGRangeLists = grplot,
                stGroupName = c("diffsites"),
                enableCI = FALSE,
+               pltTxType =  "mrna",
                miscOutFilePrefix = miscOutFilePrefix)
 
   }

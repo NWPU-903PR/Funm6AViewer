@@ -4,6 +4,14 @@
 getdescore <- function(deseqre,
                        scoretype = "pval") {
 
+  m <- nrow(deseqre)
+  n <- ncol(deseqre)
+
+  if (n == 3) {
+    deseqre0 <- rep(0, m)
+    deseqre <- cbind(deseqre, deseqre0)
+  }
+
   names(deseqre) <- c("name", "pval", "padj", "log2FoldChange")
   if (scoretype == "pval") {
     descore <- as.numeric(deseqre$pval)
