@@ -3,7 +3,7 @@ Identification and visualization of  functional differential m6A methylation gen
 
 ## 1. Installation
 
-Funm6AViewer depends on GenomicFeatures, Guitar, trackViewer, DESeq2, STRINGdb, TxDb.Hsapiens.UCSC.hg19.knownGene, org.Hs.eg.db R packages and please make sure they are installed before installing Funm6AViewer. An R version >= 3.6 is required.
+Funm6AViewer depends on GenomicFeatures, Guitar, trackViewer, DESeq2, STRINGdb, TxDb.Hsapiens.UCSC.hg19.knownGene, org.Hs.eg.db R packages and please make sure they are installed before installing Funm6AViewer. An R version >= 3.6 is suggested.
 
 Install the required packages
 ```{r, eval=FALSE}
