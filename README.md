@@ -21,6 +21,20 @@ if (!requireNamespace("devtools", quietly = TRUE))
     install.packages("devtools")
 devtools::install_github("NWPU-903PR/Funm6AViewer")
 ```
+### Test the installation
+
+To test the installation, please run the following toy example:
+```{r, eval=FALSE}
+library(Funm6AViewer)
+
+dminfo <- system.file("extdata", "DMinfo_toy.xls", package="Funm6AViewer")
+dminfo <- read.table(dminfo, header = TRUE, stringsAsFactors = FALSE)
+
+bamreadsgr <- system.file("extdata", "bamgrlist_toy.RData", package="Funm6AViewer")
+load(bamreadsgr)
+
+re <- coverageplot(dminfo = dminfo, grlist = grlist, intrested_gene = "MYC")
+```
 
 ## 2. Data required
 
