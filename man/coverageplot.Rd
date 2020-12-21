@@ -15,7 +15,8 @@ coverageplot(dminfo,
              savepath = NA,
              txdb = TxDb.Hsapiens.UCSC.hg19.knownGene,
              orgsymbol = org.Hs.egSYMBOL,
-             orgdb = org.Hs.eg.db)
+             orgdb = org.Hs.eg.db,
+             zoom_region = NA)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -42,6 +43,9 @@ The gene name annotation. You need to input it similar to "org.Hs.egSYMBOL" if D
 }
   \item{orgdb}{
 The annotation of genome. You need to input it similar to "org.Hs.eg.db" if DefaultGenome is use other genomes instead of human genome.
+}
+  \item{zoom_region}{
+The region to be zoomed near the differential methylation sites. It should be a integer, e.g., 100 means 100 bp up- and down-stream of the sites will be zoomed.
 }
 }
 \details{
