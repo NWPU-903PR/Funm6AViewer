@@ -175,7 +175,7 @@ dminfo <- read.table(dminfo, header = TRUE, stringsAsFactors = FALSE)
 bamreadsgr <- system.file("extdata", "bamgrlist_toy.RData", package="Funm6AViewer")
 load(bamreadsgr)
 
-siggene <- c("MYC")
+siggene <- c("MYC", "CCNT1")
 ```
 
 Make plot:
@@ -184,9 +184,9 @@ re <- coverageplot(dminfo = dminfo, grlist = grlist, intrested_gene = siggene)
 ```
 Users can zoom the reads coverage near the differential m6A sites by setting the `zoom_region` as following:
 ```{r}
-re <- coverageplot(dminfo = dminfo, grlist = grlist, intrested_gene = siggene, zoom_region = 100)
+re <- coverageplot(dminfo = dminfo, grlist = grlist, intrested_gene = "CCNT1", zoom_region = 100)
 ```
-which means 100 bp up- and down-stream of the sites on gene MYC will be zoomed.
+Then 100 bp up- and down-stream of the sites on gene CCNT1 will be zoomed.
 
 ## 6. FunDMDeep-m6A
 
