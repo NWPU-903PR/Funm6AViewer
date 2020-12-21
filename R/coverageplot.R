@@ -8,7 +8,8 @@ coverageplot <- function(dminfo,
                          savepath = NA,
                          txdb = TxDb.Hsapiens.UCSC.hg19.knownGene,
                          orgsymbol = org.Hs.egSYMBOL,
-                         orgdb = org.Hs.eg.db) {
+                         orgdb = org.Hs.eg.db,
+                         zoom_region = NA) {
 
   ## prepare parameter
 
@@ -81,6 +82,22 @@ coverageplot <- function(dminfo,
       } else {
         nodmpeak <- FALSE
       }
+
+      ## zoom sites
+
+      if (!is.na(zoom_region)) {
+        zoom_ind <- c(start(examsite), end(examsite))
+        zoom_left <- min(zoom_ind) - zoom_region
+        zoom_right <- max(zoom_ind) + zoom_region
+
+        gr0 <- gr
+        start(gr0) <- zoom_left
+        end(gr0) <- zoom_right
+      } else {
+        gr0 <- gr
+      }
+
+      ## make plot
 
       if (width(examsite)[1] == 1) {
 
@@ -174,10 +191,10 @@ coverageplot <- function(dminfo,
         trackList <- trackList[c(1, trlun, trltr, 2)]
 
         ## plot
-        vp <- viewTracks(trackList, gr=gr, autoOptimizeStyle=TRUE, newpage=TRUE, viewerStyle=viewerStyle, operator="+")
+        vp <- viewTracks(trackList, gr=gr0, autoOptimizeStyle=TRUE, newpage=TRUE, viewerStyle=viewerStyle, operator="+")
 
         pdf(file = paste(savepath, "/", genesymbol, "_ReadsCoverage.pdf", sep = ""), width = 12, height = 8)
-        vp <- viewTracks(trackList, gr=gr, autoOptimizeStyle=TRUE, newpage=TRUE, viewerStyle=viewerStyle, operator="+")
+        vp <- viewTracks(trackList, gr=gr0, autoOptimizeStyle=TRUE, newpage=TRUE, viewerStyle=viewerStyle, operator="+")
         dev.off()
 
       } else {
@@ -275,11 +292,11 @@ coverageplot <- function(dminfo,
         trackList <- trackList[c(1, trlun, trltr, 2)]
 
         ## plot
-        vp <- viewTracks(trackList, gr=gr, autoOptimizeStyle=TRUE, newpage=TRUE, viewerStyle=viewerStyle, operator="+")
+        vp <- viewTracks(trackList, gr=gr0, autoOptimizeStyle=TRUE, newpage=TRUE, viewerStyle=viewerStyle, operator="+")
 
         if (!nodmpeak) {
           ind <- resize(examsite, width = 1, fix = "center")
-          indx <- (start(ind) - start(gr))/width(gr)
+          indx <- (start(ind) - start(gr0))/width(gr0)
           indy <- rep(0.78, length(ind))
           indy[ind$foldenrich == "hypo"] <- 0.75
           indl <- as.character(ind$foldenrich)
@@ -311,11 +328,11 @@ coverageplot <- function(dminfo,
 
         ## save plot
         pdf(file = paste(savepath, "/", genesymbol, "_ReadsCoverage.pdf", sep = ""), width = 12, height = 8)
-        vp <- viewTracks(trackList, gr=gr, autoOptimizeStyle=TRUE, newpage=TRUE, viewerStyle=viewerStyle, operator="+")
+        vp <- viewTracks(trackList, gr=gr0, autoOptimizeStyle=TRUE, newpage=TRUE, viewerStyle=viewerStyle, operator="+")
 
         if (!nodmpeak) {
           ind <- resize(examsite, width = 1, fix = "center")
-          indx <- (start(ind) - start(gr))/width(gr)
+          indx <- (start(ind) - start(gr0))/width(gr0)
           indy <- rep(0.78, length(ind))
           indy[ind$foldenrich == "hypo"] <- 0.75
           indl <- as.character(ind$foldenrich)
