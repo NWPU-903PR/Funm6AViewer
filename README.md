@@ -13,7 +13,7 @@ if (!requireNamespace("BiocManager", quietly = TRUE))
 BiocManager::install(c("GenomicFeatures", "GenomicAlignments", "Rsamtools", "Guitar", "trackViewer", "DESeq2", "apeglm", "STRINGdb",    
                        "TxDb.Hsapiens.UCSC.hg19.knownGene", "org.Hs.eg.db"), version = "3.10")
 ```
-Note that if you installed a different version of Bioconductor packages rather than version 3.10, you should check the `STRINGdb` supported version and assign it to `version` parameter of `funm6aviewer` function. For example, by default, the `version` of `funm6aviewer` is set as version = "10" which is corresponding to STRINGdb version = 10 and Bioconductor version = 3.10; if you installed Bioconductor version = 3.11, the corresponding STRINGdb version should be "11", then the `version` should be set as version = "11".
+Note that if your are using an R version lower than 3.6, please install the corresponding Bioconductor version and if you installed a different version of Bioconductor packages rather than version 3.10, you should check the `STRINGdb` supported version and assign it to `version` parameter of `funm6aviewer` function. For example, by default, the `version` of `funm6aviewer` is set as version = "10" which is corresponding to STRINGdb version = 10 and Bioconductor version = 3.10; if you installed Bioconductor version = 3.11, the corresponding STRINGdb version should be "11", then the `version` should be set as version = "11".
 
 Install Funm6AViewer
 ```{r, eval=FALSE}
