@@ -16,7 +16,10 @@ coverageplot(dminfo,
              txdb = TxDb.Hsapiens.UCSC.hg19.knownGene,
              orgsymbol = org.Hs.egSYMBOL,
              orgdb = org.Hs.eg.db,
-             zoom_region = NA)
+             zoom_region = NA,
+             label_log2FD = FALSE,
+             label_log2FD_rot = 45,
+             add_guideline = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -46,6 +49,15 @@ The annotation of genome. You need to input it similar to "org.Hs.eg.db" if Defa
 }
   \item{zoom_region}{
 The region to be zoomed near the differential methylation sites. It should be a integer, e.g., 100 means 100 bp up- and down-stream of the sites will be zoomed.
+}
+  \item{label_log2FD}{
+A logical value determines whether the log2 fold change should be labeled with differential methylation sites, FALSE in default.
+}
+  \item{label_log2FD_rot}{
+The angle to rotate the text of log2 fold change.
+}
+  \item{add_guideline}{
+A logical value determines whether to add guideline for each differential methylation site to better observe the fragments coverage near the sites, FALSE in default.
 }
 }
 \details{
