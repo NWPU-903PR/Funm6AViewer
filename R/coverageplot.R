@@ -9,7 +9,10 @@ coverageplot <- function(dminfo,
                          txdb = TxDb.Hsapiens.UCSC.hg19.knownGene,
                          orgsymbol = org.Hs.egSYMBOL,
                          orgdb = org.Hs.eg.db,
-                         zoom_region = NA) {
+                         zoom_region = NA,
+                         label_log2FD = FALSE,
+                         label_log2FD_rot = 45,
+                         add_guideline = FALSE) {
 
   ## prepare parameter
 
@@ -27,9 +30,18 @@ coverageplot <- function(dminfo,
   grlist <- grlist[-length(grlist)]
 
   dmanno <- dminfo
-  dmgr <-  GRanges(seqnames = dminfo$chr,
-                   IRanges(start = (dminfo$chromStart + 1), end = dminfo$chromEnd),
-                   strand = dminfo$strand)
+
+  if (label_log2FD) {
+    dmgr <-  GRanges(seqnames = dminfo$chr,
+                     IRanges(start = (dminfo$chromStart + 1), end = dminfo$chromEnd, names = paste0("log2FD: ", round(dminfo$log2fd,2))),
+                     strand = dminfo$strand)
+  } else {
+    dmgr <-  GRanges(seqnames = dminfo$chr,
+                     IRanges(start = (dminfo$chromStart + 1), end = dminfo$chromEnd),
+                     strand = dminfo$strand)
+  }
+
+
 
   mcols(dmgr) <- dmanno[, c(4, 5, 7, 8, 9)]
 
@@ -65,6 +77,10 @@ coverageplot <- function(dminfo,
 
     ## get site info
     examsite <- dmgr[which(countOverlaps(dmgr, gr, ignore.strand = TRUE) != 0)]
+
+    ind <- countOverlaps(grs, examsite)
+    ind <- ind == max(ind)
+    grs <- grs[ind]
 
     if (length(gr) != 0) {
 
@@ -108,6 +124,11 @@ coverageplot <- function(dminfo,
         examsite$border <- "#999999"
         examsite$cex = 0.8
         examsite$feature.height <- 0
+
+        if (label_log2FD) {
+          examsite$label.parameter.rot <- label_log2FD_rot
+          examsite$label.parameter.gp <- list(cex=0.8)
+        }
 
         lollipopData <- new("track", dat=examsite[examsite$foldenrich == "hyper"],
                             dat2=examsite[examsite$foldenrich == "hypo"], type="lollipopData")
@@ -192,9 +213,15 @@ coverageplot <- function(dminfo,
 
         ## plot
         vp <- viewTracks(trackList, gr=gr0, autoOptimizeStyle=TRUE, newpage=TRUE, viewerStyle=viewerStyle, operator="+")
+        if (add_guideline) {
+          addGuideLine(as.numeric(start(examsite)), vp=vp)
+        }
 
         pdf(file = paste(savepath, "/", genesymbol, "_ReadsCoverage.pdf", sep = ""), width = 12, height = 8)
         vp <- viewTracks(trackList, gr=gr0, autoOptimizeStyle=TRUE, newpage=TRUE, viewerStyle=viewerStyle, operator="+")
+        if (add_guideline) {
+          addGuideLine(as.numeric(start(examsite)), vp=vp)
+        }
         dev.off()
 
       } else {
@@ -293,6 +320,9 @@ coverageplot <- function(dminfo,
 
         ## plot
         vp <- viewTracks(trackList, gr=gr0, autoOptimizeStyle=TRUE, newpage=TRUE, viewerStyle=viewerStyle, operator="+")
+        if (add_guideline) {
+          addGuideLine(c(as.numeric(start(examsite)), as.numeric(end(examsite))), vp=vp)
+        }
 
         if (!nodmpeak) {
           ind <- resize(examsite, width = 1, fix = "center")
@@ -301,6 +331,10 @@ coverageplot <- function(dminfo,
           indy[ind$foldenrich == "hypo"] <- 0.75
           indl <- as.character(ind$foldenrich)
           ind <- ind$foldenrich == "hyper"
+
+          if (label_log2FD) {
+            indl <- as.character(names(examsite))
+          }
 
           if (sum(ind) > 0) {
             addArrowMark(list(x=unit(indx[ind], "npc"),
@@ -329,6 +363,9 @@ coverageplot <- function(dminfo,
         ## save plot
         pdf(file = paste(savepath, "/", genesymbol, "_ReadsCoverage.pdf", sep = ""), width = 12, height = 8)
         vp <- viewTracks(trackList, gr=gr0, autoOptimizeStyle=TRUE, newpage=TRUE, viewerStyle=viewerStyle, operator="+")
+        if (add_guideline) {
+          addGuideLine(c(as.numeric(start(examsite)), as.numeric(end(examsite))), vp=vp)
+        }
 
         if (!nodmpeak) {
           ind <- resize(examsite, width = 1, fix = "center")
@@ -337,6 +374,10 @@ coverageplot <- function(dminfo,
           indy[ind$foldenrich == "hypo"] <- 0.75
           indl <- as.character(ind$foldenrich)
           ind <- ind$foldenrich == "hyper"
+
+          if (label_log2FD) {
+            indl <- as.character(names(examsite))
+          }
 
           if (sum(ind) > 0) {
             addArrowMark(list(x=unit(indx[ind], "npc"),
